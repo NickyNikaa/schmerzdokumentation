@@ -1,0 +1,1831 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<title>Schmerz- und Verlaufsdokumentation</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#ffffff; --ink:#1a1d21; --ink-soft:#5b6570; --line:#dfe3e8;
+  --accent:#1f5f8b; --accent-soft:#e8f0f6; --warn:#a8471c; --warn-soft:#fbeee7;
+  --ok:#2c6e49; --ok-soft:#e7f2ec; --bad:#9b2c2c; --bad-soft:#fbeaea;
+  --radius:10px; --shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.06);
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.55; font-size:16px;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{line-height:1.25; margin:0 0 .5rem}
+h1{font-size:1.4rem; font-weight:650; letter-spacing:-.01em}
+h2{font-size:1.15rem; font-weight:640; letter-spacing:-.01em}
+h3{font-size:1rem; font-weight:640}
+h4{font-size:.9rem; font-weight:640; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em}
+p{margin:0 0 .75rem}
+a{color:var(--accent)}
+small,.small{font-size:.82rem; color:var(--ink-soft)}
+
+/* ---------- Layout ---------- */
+header.app{
+  background:var(--card); border-bottom:1px solid var(--line);
+  position:sticky; top:0; z-index:40;
+}
+.head-inner{max-width:1080px; margin:0 auto; padding:.85rem 1.1rem .1rem}
+.head-top{display:flex; align-items:baseline; gap:.75rem; flex-wrap:wrap}
+.head-top .sub{color:var(--ink-soft); font-size:.85rem}
+nav.tabs{display:flex; gap:.15rem; overflow-x:auto; margin-top:.7rem; scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{
+  appearance:none; border:0; background:transparent; cursor:pointer; white-space:nowrap;
+  font:inherit; font-size:.9rem; font-weight:550; color:var(--ink-soft);
+  padding:.55rem .8rem; border-bottom:2.5px solid transparent; border-radius:6px 6px 0 0;
+}
+nav.tabs button:hover{color:var(--ink); background:#f0f2f5}
+nav.tabs button[aria-selected="true"]{color:var(--accent); border-bottom-color:var(--accent)}
+main{max-width:1080px; margin:0 auto; padding:1.25rem 1.1rem 5rem}
+section.tabpanel[hidden]{display:none}
+
+.card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:1.1rem 1.2rem; margin-bottom:1rem; box-shadow:var(--shadow)}
+.card > :last-child{margin-bottom:0}
+.card-head{display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; margin-bottom:.85rem}
+.card-head h2,.card-head h3{margin:0}
+
+.grid{display:grid; gap:.9rem}
+.g2{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(135px,1fr))}
+.row{display:flex; gap:.6rem; flex-wrap:wrap; align-items:center}
+
+/* ---------- Controls ---------- */
+label{display:block; font-size:.85rem; font-weight:550; margin-bottom:.28rem; color:var(--ink)}
+label .hint{font-weight:400; color:var(--ink-soft)}
+input[type=text],input[type=date],input[type=time],input[type=number],input[type=email],select,textarea{
+  width:100%; font:inherit; font-size:.92rem; padding:.5rem .6rem; color:var(--ink);
+  border:1px solid var(--line); border-radius:7px; background:#fff;
+}
+textarea{min-height:78px; resize:vertical; line-height:1.5}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent); outline-offset:-1px; border-color:var(--accent)}
+.field{margin-bottom:.9rem}
+
+button.btn{
+  appearance:none; font:inherit; font-size:.88rem; font-weight:600; cursor:pointer;
+  padding:.5rem .95rem; border-radius:7px; border:1px solid var(--line); background:#fff; color:var(--ink);
+}
+button.btn:hover{background:#f3f5f7}
+button.btn.primary{background:var(--accent); border-color:var(--accent); color:#fff}
+button.btn.primary:hover{filter:brightness(1.08)}
+button.btn.danger{color:var(--bad); border-color:#e8c9c9}
+button.btn.danger:hover{background:var(--bad-soft)}
+button.btn.mini{padding:.28rem .6rem; font-size:.8rem}
+
+/* Slider */
+.slider-wrap{display:flex; align-items:center; gap:.75rem}
+input[type=range]{flex:1; accent-color:var(--accent); height:26px}
+.slider-val{
+  min-width:3.1rem; text-align:center; font-variant-numeric:tabular-nums; font-weight:680;
+  font-size:1.05rem; padding:.2rem .35rem; border-radius:6px; background:var(--accent-soft); color:var(--accent);
+}
+.slider-val.lvl-0{background:var(--ok-soft); color:var(--ok)}
+.slider-val.lvl-1{background:#fdf4e3; color:#8a6116}
+.slider-val.lvl-2{background:var(--warn-soft); color:var(--warn)}
+.slider-val.lvl-3{background:var(--bad-soft); color:var(--bad)}
+.scale-ends{display:flex; justify-content:space-between; font-size:.75rem; color:var(--ink-soft); margin-top:.1rem}
+
+/* Chips */
+.chips{display:flex; flex-wrap:wrap; gap:.4rem}
+.chip{
+  display:inline-flex; align-items:center; gap:.35rem; cursor:pointer; user-select:none;
+  border:1px solid var(--line); border-radius:999px; padding:.32rem .7rem;
+  font-size:.84rem; background:#fff; color:var(--ink-soft);
+}
+.chip input{position:absolute; opacity:0; width:0; height:0}
+.chip:has(input:checked){background:var(--accent-soft); border-color:var(--accent); color:var(--accent); font-weight:600}
+.chip:has(input:focus-visible){outline:2px solid var(--accent); outline-offset:2px}
+
+/* Stats */
+.stat{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:.8rem .9rem}
+.stat .k{font-size:.74rem; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-soft); font-weight:640}
+.stat .v{font-size:1.6rem; font-weight:700; font-variant-numeric:tabular-nums; letter-spacing:-.02em; margin-top:.15rem}
+.stat .u{font-size:.8rem; font-weight:500; color:var(--ink-soft); margin-left:.15rem}
+.stat .d{font-size:.78rem; color:var(--ink-soft); margin-top:.1rem}
+
+.notice{border-radius:8px; padding:.7rem .85rem; font-size:.87rem; border:1px solid; margin-bottom:1rem}
+.notice.info{background:var(--accent-soft); border-color:#c5dbea; color:#14425f}
+.notice.warn{background:var(--warn-soft); border-color:#f0d2c0; color:#7a3413}
+.notice.ok{background:var(--ok-soft); border-color:#c6e0d2; color:#1d5235}
+.notice p:last-child{margin-bottom:0}
+
+table.data{width:100%; border-collapse:collapse; font-size:.86rem}
+table.data th,table.data td{text-align:left; padding:.45rem .5rem; border-bottom:1px solid var(--line); vertical-align:top}
+table.data th{font-size:.74rem; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); font-weight:640; background:#fafbfc}
+table.data td.num{text-align:right; font-variant-numeric:tabular-nums}
+table.data tr:hover td{background:#fafbfc}
+.tbl-scroll{overflow-x:auto; margin:0 -.4rem}
+
+.badge{display:inline-block; padding:.1rem .45rem; border-radius:5px; font-size:.75rem; font-weight:640}
+.badge.ok{background:var(--ok-soft); color:var(--ok)}
+.badge.mid{background:#fdf4e3; color:#8a6116}
+.badge.bad{background:var(--bad-soft); color:var(--bad)}
+
+details.acc{border:1px solid var(--line); border-radius:8px; margin-bottom:.6rem; background:#fff}
+details.acc > summary{cursor:pointer; padding:.65rem .8rem; font-weight:600; font-size:.92rem; list-style:none}
+details.acc > summary::-webkit-details-marker{display:none}
+details.acc > summary::before{content:"▸ "; color:var(--accent)}
+details.acc[open] > summary::before{content:"▾ "}
+details.acc > div{padding:0 .8rem .8rem}
+
+.repeat-row{display:grid; gap:.5rem; align-items:end; padding:.7rem; border:1px solid var(--line); border-radius:8px; margin-bottom:.5rem; background:#fbfcfd}
+.repeat-row .rm{justify-self:end}
+
+.chart-wrap{overflow-x:auto}
+svg.chart{display:block; min-width:520px; width:100%; height:auto}
+.legend{display:flex; gap:1rem; flex-wrap:wrap; font-size:.8rem; color:var(--ink-soft); margin-top:.4rem}
+.legend i{display:inline-block; width:14px; height:3px; border-radius:2px; margin-right:.35rem; vertical-align:middle}
+
+.qa-block{border-left:3px solid var(--accent); padding-left:.85rem; margin-bottom:1.1rem}
+.qa-block .q{font-weight:600; font-size:.93rem; margin-bottom:.15rem}
+.qa-block .why{font-size:.82rem; color:var(--ink-soft); margin-bottom:.4rem}
+
+.toast{
+  position:fixed; left:50%; bottom:1.4rem; transform:translateX(-50%) translateY(120%);
+  background:#1a1d21; color:#fff; padding:.6rem 1.1rem; border-radius:8px; font-size:.88rem;
+  box-shadow:0 8px 24px rgba(0,0,0,.2); z-index:100; transition:transform .25s ease; max-width:90vw;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+#printArea{display:none}
+
+/* ---------- Print ---------- */
+@media print{
+  @page{size:A4; margin:16mm 15mm 18mm}
+  html,body{background:#fff; font-size:10.5pt; color:#000}
+  body > *{display:none !important}
+  #printArea{display:block !important}
+  #printArea h1{font-size:16pt; margin-bottom:.15rem}
+  #printArea h2{font-size:12pt; margin-top:1.1rem; border-bottom:1px solid #999; padding-bottom:.15rem}
+  #printArea h3{font-size:10.5pt; margin-top:.7rem}
+  #printArea .p-head{border-bottom:2px solid #000; padding-bottom:.4rem; margin-bottom:.8rem}
+  #printArea .p-meta{font-size:9pt; color:#333}
+  #printArea table{width:100%; border-collapse:collapse; font-size:9.2pt; margin:.4rem 0 .8rem}
+  #printArea th,#printArea td{border:1px solid #999; padding:3.5pt 5pt; text-align:left; vertical-align:top}
+  #printArea th{background:#eee; font-weight:700}
+  #printArea .kv{display:grid; grid-template-columns:38% 62%; font-size:9.6pt}
+  #printArea .kv > div{border-bottom:1px solid #ddd; padding:2.5pt 0}
+  #printArea .kv .k{font-weight:600}
+  #printArea .box{border:1.5pt solid #000; padding:7pt 9pt; margin:.5rem 0 .9rem; background:#f4f4f4}
+  #printArea .answer-line{border-bottom:1px dotted #666; height:15pt; margin-top:3pt}
+  #printArea .avoid-break{break-inside:avoid; page-break-inside:avoid}
+  #printArea .pagebreak{break-before:page; page-break-before:always}
+  #printArea footer{margin-top:1.2rem; border-top:1px solid #999; padding-top:.3rem; font-size:8.4pt; color:#444}
+  #printArea .muted{color:#555}
+  #printArea svg{max-width:100%; height:auto}
+}
+</style>
+</head>
+<body>
+
+<header class="app">
+  <div class="head-inner">
+    <div class="head-top">
+      <h1>Schmerz- und Verlaufsdokumentation</h1>
+      <span class="sub" id="headSub">Tägliche Selbsterfassung für Arztgespräche und Gutachten</span>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="dash" aria-selected="true">Übersicht</button>
+      <button role="tab" data-tab="entry" aria-selected="false">Tageseintrag</button>
+      <button role="tab" data-tab="history" aria-selected="false">Verlauf</button>
+      <button role="tab" data-tab="quest" aria-selected="false">Fragebögen</button>
+      <button role="tab" data-tab="dossier" aria-selected="false">Arzt-Dossier</button>
+      <button role="tab" data-tab="consult" aria-selected="false">Arztgespräch</button>
+      <button role="tab" data-tab="data" aria-selected="false">Daten &amp; Export</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ ÜBERSICHT ============ -->
+<section class="tabpanel" id="tab-dash">
+
+  <div class="notice info" id="emptyHint" hidden>
+    <p><strong>Noch keine Einträge.</strong> Beginne unter <em>Tageseintrag</em>. Schon zwei Wochen lückenlose
+    Erfassung verändern ein Arztgespräch spürbar: Aus „es tut sehr weh“ wird eine Kurve mit Zahlen,
+    Uhrzeiten und Metern.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h2>Kennzahlen der letzten 30 Tage</h2>
+      <div class="row">
+        <label for="statRange" style="margin:0">Zeitraum</label>
+        <select id="statRange" style="width:auto">
+          <option value="7">7 Tage</option>
+          <option value="14">14 Tage</option>
+          <option value="30" selected>30 Tage</option>
+          <option value="90">90 Tage</option>
+          <option value="9999">Gesamter Verlauf</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid g4" id="statGrid"></div>
+    <p class="small" style="margin-top:.8rem">Schmerzwerte auf der klinisch üblichen numerischen Ratingskala
+      <strong>NRS 0–10</strong>. Die Umrechnung auf 0–100 steht jeweils dahinter, damit du beide Formate
+      angeben kannst, ohne dich zu verrechnen.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Schmerzverlauf</h2>
+      <button class="btn mini" id="printChart">Diagramm drucken</button></div>
+    <div class="chart-wrap" id="chartPain"></div>
+    <div class="legend">
+      <span><i style="background:#1f5f8b"></i>Ruheschmerz</span>
+      <span><i style="background:#a8471c"></i>Belastungsschmerz</span>
+      <span><i style="background:#9b2c2c"></i>Tagesmaximum</span>
+      <span><i style="background:#c8ccd1"></i>Nacht mit Schmerz&shy;erwachen</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Funktion im Verlauf</h2>
+    <div class="chart-wrap" id="chartFunc"></div>
+    <div class="legend">
+      <span><i style="background:#2c6e49"></i>Schmerzfreie Gehstrecke (m)</span>
+      <span><i style="background:#7a5195"></i>Stehdauer (min)</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Muster, die im Arztgespräch zählen</h2>
+    <div id="patterns"></div>
+    <p class="small" style="margin-top:.6rem">Diese Hinweise sind automatisch aus deinen Eingaben abgeleitet.
+      Sie sind <strong>keine Diagnose</strong>, sondern Beobachtungen, die du gezielt ansprechen kannst.</p>
+  </div>
+
+</section>
+
+<!-- ============ TAGESEINTRAG ============ -->
+<section class="tabpanel" id="tab-entry" hidden>
+  <form id="entryForm">
+  <div class="card">
+    <div class="card-head">
+      <h2 id="entryTitle">Neuer Tageseintrag</h2>
+      <span class="small" id="entryStatus"></span>
+    </div>
+    <div class="grid g2">
+      <div class="field">
+        <label for="e_date">Datum</label>
+        <input type="date" id="e_date" required>
+      </div>
+      <div class="field">
+        <label for="e_context">Besonderheit des Tages <span class="hint">optional</span></label>
+        <select id="e_context">
+          <option value="">— normaler Tag —</option>
+          <option>Ruhetag, kaum belastet</option>
+          <option>Längeres Gehen / Einkauf</option>
+          <option>Arbeitstag</option>
+          <option>Arzt- / Kliniktermin</option>
+          <option>Physiotherapie</option>
+          <option>Wetterumschwung</option>
+          <option>Nach Sturz / Fehltritt</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Schmerzintensität</h2>
+    <p class="small">Denk an den heutigen Tag zurück. 0 = kein Schmerz, 10 = stärkster vorstellbarer Schmerz.</p>
+    <div class="field">
+      <label for="e_rest">Ruheschmerz <span class="hint">im Sitzen/Liegen, Fuß hochgelegt</span></label>
+      <div class="slider-wrap"><input type="range" id="e_rest" min="0" max="10" step="1" value="0"><span class="slider-val" id="v_e_rest">0</span></div>
+      <div class="scale-ends"><span>0 kein Schmerz</span><span>10 unerträglich</span></div>
+    </div>
+    <div class="field">
+      <label for="e_load">Belastungsschmerz <span class="hint">beim Auftreten und Gehen</span></label>
+      <div class="slider-wrap"><input type="range" id="e_load" min="0" max="10" step="1" value="0"><span class="slider-val" id="v_e_load">0</span></div>
+      <div class="scale-ends"><span>0 kein Schmerz</span><span>10 unerträglich</span></div>
+    </div>
+    <div class="field">
+      <label for="e_max">Tagesmaximum <span class="hint">stärkster Schmerz heute, egal wann</span></label>
+      <div class="slider-wrap"><input type="range" id="e_max" min="0" max="10" step="1" value="0"><span class="slider-val" id="v_e_max">0</span></div>
+      <div class="scale-ends"><span>0 kein Schmerz</span><span>10 unerträglich</span></div>
+    </div>
+    <div class="field">
+      <label>Wie fühlt sich der Schmerz an? <span class="hint">Mehrfachauswahl — unterscheidet Knochen- von Nervenschmerz</span></label>
+      <div class="chips" id="chips_char"></div>
+    </div>
+    <div class="field">
+      <label>Wo genau? <span class="hint">Mehrfachauswahl</span></label>
+      <div class="chips" id="chips_loc"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Nacht und Schlaf</h2>
+    <div class="grid g2">
+      <div class="field">
+        <label for="e_nightWakes">Nächtliche Wachphasen durch Schmerz</label>
+        <input type="number" id="e_nightWakes" min="0" max="20" step="1" value="0">
+      </div>
+      <div class="field">
+        <label for="e_wakeTime">Endgültig wach seit <span class="hint">z.&nbsp;B. 05:03</span></label>
+        <input type="time" id="e_wakeTime">
+      </div>
+      <div class="field">
+        <label for="e_sleep">Geschätzte Schlafdauer (Stunden)</label>
+        <input type="number" id="e_sleep" min="0" max="16" step="0.5" placeholder="z. B. 5.5">
+      </div>
+      <div class="field">
+        <label for="e_sleepQual">Schlafqualität (0 = sehr schlecht, 10 = erholsam)</label>
+        <div class="slider-wrap"><input type="range" id="e_sleepQual" min="0" max="10" step="1" value="5"><span class="slider-val" id="v_e_sleepQual">5</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Funktion und Belastbarkeit</h2>
+    <p class="small">Diese Zahlen sind das Überzeugendste an der ganzen Dokumentation, weil sie überprüfbar sind.
+      Schätze lieber grob und ehrlich als gar nicht.</p>
+    <div class="grid g2">
+      <div class="field">
+        <label for="e_walk">Schmerzfreie bzw. erträgliche Gehstrecke am Stück (Meter)</label>
+        <input type="number" id="e_walk" min="0" max="50000" step="10" placeholder="z. B. 150">
+      </div>
+      <div class="field">
+        <label for="e_stand">Stehdauer am Stück (Minuten)</label>
+        <input type="number" id="e_stand" min="0" max="600" step="1" placeholder="z. B. 8">
+      </div>
+      <div class="field">
+        <label for="e_aid">Hilfsmittel heute</label>
+        <select id="e_aid">
+          <option value="keine">keine</option>
+          <option value="Einlage/Orthese">Einlage oder Orthese</option>
+          <option value="1 Gehstütze">1 Unterarmgehstütze</option>
+          <option value="2 Gehstützen">2 Unterarmgehstützen</option>
+          <option value="Rollator">Rollator</option>
+          <option value="Rollstuhl (teilweise)">Rollstuhl, teilweise</option>
+          <option value="Rollstuhl (überwiegend)">Rollstuhl, überwiegend</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="e_stairs">Treppensteigen möglich?</label>
+        <select id="e_stairs">
+          <option value="">— keine Angabe —</option>
+          <option value="normal">normal, alternierend</option>
+          <option value="nachstellend">nur nachstellend, mit Geländer</option>
+          <option value="nur wenige Stufen">nur wenige Stufen, unter Schmerzen</option>
+          <option value="nicht möglich">nicht möglich</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label for="e_impair">Beeinträchtigung im Alltag heute <span class="hint">Arbeit, Haushalt, Einkauf, soziale Teilhabe</span></label>
+      <div class="slider-wrap"><input type="range" id="e_impair" min="0" max="10" step="1" value="0"><span class="slider-val" id="v_e_impair">0</span></div>
+      <div class="scale-ends"><span>0 gar nicht</span><span>10 vollständig verhindert</span></div>
+    </div>
+    <div class="field">
+      <label>Was war heute nicht möglich? <span class="hint">Mehrfachauswahl</span></label>
+      <div class="chips" id="chips_unable"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Lokalbefund und Warnzeichen</h2>
+    <p class="small">Farbe, Temperatur und Berührungsempfindlichkeit sind die Merkmale, an denen ein
+      komplexes regionales Schmerzsyndrom (CRPS) erkannt wird. Sie zu dokumentieren ist wichtig, weil sie
+      beim Arzttermin oft gerade nicht sichtbar sind.</p>
+    <div class="grid g2">
+      <div class="field">
+        <label for="e_swell">Schwellung</label>
+        <select id="e_swell">
+          <option value="0">keine</option>
+          <option value="1">leicht</option>
+          <option value="2">deutlich</option>
+          <option value="3">massiv</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="e_temp">Hauttemperatur im Seitenvergleich</label>
+        <select id="e_temp">
+          <option value="">— keine Angabe —</option>
+          <option value="gleich">gleich</option>
+          <option value="wärmer">betroffene Seite wärmer</option>
+          <option value="kälter">betroffene Seite kälter</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="e_color">Hautfarbe im Seitenvergleich</label>
+        <select id="e_color">
+          <option value="">— keine Angabe —</option>
+          <option value="gleich">gleich</option>
+          <option value="rötlich">rötlich / livide</option>
+          <option value="blass">blass / marmoriert</option>
+          <option value="bläulich">bläulich</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Weitere Beobachtungen</label>
+        <div class="chips" id="chips_signs"></div>
+      </div>
+    </div>
+    <div class="notice warn" id="redFlagBox" hidden style="margin-top:.6rem"></div>
+  </div>
+
+  <div class="card">
+    <h2>Medikation</h2>
+    <div id="medRows"></div>
+    <button type="button" class="btn mini" id="addMed">+ Medikament hinzufügen</button>
+    <div class="field" style="margin-top:.9rem">
+      <label for="e_medEffect">Wirkung der Schmerzmittel heute <span class="hint">0 = keinerlei Wirkung, 10 = vollständig schmerzfrei</span></label>
+      <div class="slider-wrap"><input type="range" id="e_medEffect" min="0" max="10" step="1" value="0"><span class="slider-val" id="v_e_medEffect">0</span></div>
+    </div>
+    <div class="field">
+      <label>Nebenwirkungen heute</label>
+      <div class="chips" id="chips_side"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Psychische Belastung</h2>
+    <p class="small">Wird von Betroffenen oft weggelassen, ist aber für die Beurteilung der Dringlichkeit
+      relevant und wird von Schmerzmedizinern ausdrücklich erwartet.</p>
+    <div class="field">
+      <label for="e_burden">Wie sehr hat der Schmerz dich heute seelisch belastet?</label>
+      <div class="slider-wrap"><input type="range" id="e_burden" min="0" max="10" step="1" value="0"><span class="slider-val" id="v_e_burden">0</span></div>
+      <div class="scale-ends"><span>0 gar nicht</span><span>10 überwältigend</span></div>
+    </div>
+    <div class="field">
+      <label for="e_note">Notiz zum Tag <span class="hint">Was war los? Was hat geholfen, was nicht?</span></label>
+      <textarea id="e_note" placeholder="Freitext — konkrete Situationen wirken im Arztgespräch stärker als Adjektive."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <button type="submit" class="btn primary">Eintrag speichern</button>
+      <button type="button" class="btn" id="entryReset">Formular leeren</button>
+      <span class="small" id="saveHint"></span>
+    </div>
+  </div>
+  </form>
+</section>
+
+<!-- ============ VERLAUF ============ -->
+<section class="tabpanel" id="tab-history" hidden>
+  <div class="card">
+    <div class="card-head">
+      <h2>Alle Einträge</h2>
+      <div class="row">
+        <button class="btn mini" id="printDiary">Tagebuch drucken</button>
+        <button class="btn mini" id="exportCsv">CSV exportieren</button>
+      </div>
+    </div>
+    <div class="tbl-scroll"><table class="data" id="histTable"></table></div>
+  </div>
+</section>
+
+<!-- ============ FRAGEBÖGEN ============ -->
+<section class="tabpanel" id="tab-quest" hidden>
+  <div class="notice info">
+    <p><strong>Warum standardisierte Fragebögen?</strong> Eine selbst gewählte Zahl kann ein Arzt beiseite legen.
+      Ein etablierter Score nicht — er ist in der Literatur verankert, andere Patientinnen wurden damit
+      gemessen, und er macht deinen Zustand mit veröffentlichten Kollektiven vergleichbar. Fülle sie
+      etwa alle vier Wochen aus, damit ein Verlauf entsteht.</p>
+  </div>
+  <div class="card">
+    <div class="card-head">
+      <h2>Fragebogen ausfüllen</h2>
+      <div class="row">
+        <select id="qSelect" style="width:auto"></select>
+        <button class="btn" id="qStart">Öffnen</button>
+      </div>
+    </div>
+    <div id="qIntro" class="small"></div>
+  </div>
+  <div class="card" id="qFormCard" hidden>
+    <div class="card-head"><h2 id="qTitle"></h2><span class="small" id="qProgress"></span></div>
+    <form id="qForm"></form>
+    <div class="row" style="margin-top:1rem">
+      <button class="btn primary" id="qSave">Auswerten und speichern</button>
+      <button class="btn" id="qCancel">Abbrechen</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><h2>Ergebnisse im Verlauf</h2>
+      <button class="btn mini" id="printQuest">Auswertung drucken</button></div>
+    <div class="tbl-scroll"><table class="data" id="qTable"></table></div>
+  </div>
+</section>
+
+<!-- ============ ARZT-DOSSIER ============ -->
+<section class="tabpanel" id="tab-dossier" hidden>
+  <div class="notice info">
+    <p><strong>So wirkt dieses Dokument.</strong> Es beginnt mit deiner Fragestellung, nicht mit deiner
+      Krankengeschichte — damit im ersten Blick klar ist, was du willst. Danach kommt der Verlauf so
+      knapp und nüchtern wie möglich. Die Funktions- und Schmerzzahlen zieht das Dokument automatisch aus
+      deinem Tagebuch. Nichts davon ist zugespitzt: Übertreibung ist der schnellste Weg, unglaubwürdig zu
+      werden. Die Wahrheit reicht in deinem Fall vollkommen aus.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Kopfdaten</h2><span class="small">wird automatisch gespeichert</span></div>
+    <div class="grid g2">
+      <div class="field"><label for="d_name">Name</label><input type="text" id="d_name" placeholder="Vor- und Nachname"></div>
+      <div class="field"><label for="d_birth">Geburtsdatum</label><input type="date" id="d_birth"></div>
+      <div class="field"><label for="d_side">Betroffene Seite</label>
+        <select id="d_side"><option value="">— wählen —</option><option value="rechts">rechts</option><option value="links">links</option></select></div>
+      <div class="field"><label for="d_insurer">Kostenträger / Versicherung</label><input type="text" id="d_insurer" placeholder="Krankenkasse oder Berufsgenossenschaft"></div>
+      <div class="field"><label for="d_case">Aktenzeichen / Versichertennummer</label><input type="text" id="d_case"></div>
+      <div class="field"><label for="d_for">Dokument gerichtet an</label><input type="text" id="d_for" placeholder="z. B. Prof. Dr. X, Klinik für Unfallchirurgie"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Fragestellung</h2>
+    <p class="small">Der wichtigste Absatz des Dokuments. Er steht auf Seite 1 ganz oben.
+      Formuliere als konkrete Bitte um Stellungnahme — das ist schwerer zu übergehen als eine Schilderung.</p>
+    <div class="field">
+      <label for="d_question">Meine Fragestellung an die Behandler</label>
+      <textarea id="d_question" style="min-height:150px"></textarea>
+      <button type="button" class="btn mini" id="d_qDefault" style="margin-top:.4rem">Vorformulierten Text einsetzen</button>
+    </div>
+    <div class="field">
+      <label for="d_goal">Was ich mit einer Entscheidung erreichen möchte <span class="hint">Behandlungsziel in deinen Worten</span></label>
+      <textarea id="d_goal" placeholder="z. B. planbare Belastbarkeit, Ende der Operationsserie, Rückkehr in den Beruf, Nächte ohne Schmerzerwachen"></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Unfall und Erstversorgung</h2>
+    <div class="grid g2">
+      <div class="field"><label for="d_accDate">Unfalldatum</label><input type="date" id="d_accDate"></div>
+      <div class="field"><label for="d_accType">Unfallart</label>
+        <select id="d_accType"><option value="">— wählen —</option><option>Arbeitsunfall</option><option>Wegeunfall</option><option>Verkehrsunfall</option><option>Sturz aus Höhe</option><option>Freizeitunfall</option><option>Sonstiges</option></select></div>
+    </div>
+    <div class="field"><label for="d_accCourse">Unfallhergang und Erstdiagnose</label>
+      <textarea id="d_accCourse" placeholder="Hergang in zwei bis drei Sätzen, dann die Erstdiagnose mit Klassifikation (z. B. drittgradig offene Kalkaneustrümmerfraktur, Sanders IV, mit Luxationskomponente) und die erstversorgende Klinik."></textarea></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Operationen im Zeitverlauf</h2><span class="small" id="opCount"></span></div>
+    <p class="small">Der Zeitstrahl ist das stärkste Einzelelement des Dossiers. Eine Tabelle mit zehn Zeilen
+      wirkt anders als der Satz „ich hatte viele Operationen“. Lücken sind kein Problem — trag ein, was du weißt.</p>
+    <div id="opRows"></div>
+    <button type="button" class="btn mini" id="addOp">+ Operation hinzufügen</button>
+  </div>
+
+  <div class="card">
+    <h2>Aktuelle Diagnosen</h2>
+    <div class="field"><label for="d_diag">Diagnoseliste <span class="hint">eine pro Zeile, wenn möglich mit ICD-10</span></label>
+      <textarea id="d_diag" style="min-height:130px"></textarea>
+      <button type="button" class="btn mini" id="d_diagHelp" style="margin-top:.4rem">Typische Diagnosetexte einfügen</button></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Bildgebung und Befunde</h2></div>
+    <div id="imgRows"></div>
+    <button type="button" class="btn mini" id="addImg">+ Befund hinzufügen</button>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Ausgeschöpfte Therapieversuche</h2></div>
+    <p class="small">Zeigt, dass die konservativen Möglichkeiten nicht offen sind — das ist Voraussetzung dafür,
+      dass ein Chirurg über eine Amputation überhaupt nachdenkt.</p>
+    <div id="thRows"></div>
+    <button type="button" class="btn mini" id="addTh">+ Therapieversuch hinzufügen</button>
+  </div>
+
+  <div class="card">
+    <h2>Aktuelle Schmerztherapie</h2>
+    <div class="field"><label for="d_medNow">Dauermedikation</label>
+      <textarea id="d_medNow" placeholder="Wirkstoff, Dosis, Einnahmefrequenz, seit wann"></textarea></div>
+    <div class="field"><label for="d_medFail">Bereits erfolglos oder wegen Nebenwirkungen beendet</label>
+      <textarea id="d_medFail" placeholder="z. B. Wirkstoff, Zeitraum, Grund des Abbruchs"></textarea></div>
+    <div class="field"><label for="d_painDoc">Schmerzmedizinische Mitbehandlung</label>
+      <input type="text" id="d_painDoc" placeholder="Praxis/Klinik, seit wann, oder: bisher keine"></div>
+  </div>
+
+  <div class="card">
+    <h2>Beruf, Alltag und Teilhabe</h2>
+    <div class="grid g2">
+      <div class="field"><label for="d_job">Beruf</label><input type="text" id="d_job"></div>
+      <div class="field"><label for="d_work">Aktuelle Arbeitsfähigkeit</label>
+        <select id="d_work"><option value="">— wählen —</option><option>voll arbeitsfähig</option><option>eingeschränkt arbeitsfähig</option><option>stufenweise Wiedereingliederung</option><option>arbeitsunfähig</option><option>Erwerbsminderungsrente beantragt</option><option>Erwerbsminderungsrente bewilligt</option></select></div>
+      <div class="field"><label for="d_gdb">Grad der Behinderung / MdE</label><input type="text" id="d_gdb" placeholder="z. B. GdB 50 / MdE 30 %"></div>
+      <div class="field"><label for="d_reha">Bisherige Reha-Maßnahmen</label><input type="text" id="d_reha"></div>
+    </div>
+    <div class="field"><label for="d_life">Konkrete Einschränkungen im Alltag</label>
+      <textarea id="d_life" placeholder="Beschreibe drei bis fünf konkrete Situationen statt allgemeiner Sätze. Konkret heißt: „Ich kann nicht am Stück duschen, weil ich nach vier Minuten Stehen den Fuß entlasten muss.“"></textarea></div>
+  </div>
+
+  <div class="card">
+    <h2>Dossier erzeugen</h2>
+    <div class="field">
+      <label>Was soll enthalten sein?</label>
+      <div class="chips" id="chips_dossier"></div>
+    </div>
+    <div class="row">
+      <button class="btn primary" id="printDossier">Dossier drucken / als PDF sichern</button>
+      <span class="small">Im Druckdialog „Als PDF sichern“ wählen.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ARZTGESPRÄCH ============ -->
+<section class="tabpanel" id="tab-consult" hidden>
+  <div class="notice info">
+    <p><strong>Ein Gesprächsbogen, keine Anklage.</strong> Nimm ihn ausgedruckt mit und schreib die Antworten
+      direkt daneben. Zwei Effekte: Du vergisst nichts, und eine Frage, die schriftlich notiert wird,
+      wird erfahrungsgemäß sorgfältiger beantwortet. Frag am Ende, ob die Antworten in den Arztbrief
+      aufgenommen werden können.</p>
+  </div>
+  <div class="card">
+    <div class="card-head"><h2>Fragen an den Operateur</h2>
+      <div class="row">
+        <button class="btn mini" id="printConsult">Fragenkatalog drucken</button>
+      </div></div>
+    <p class="small">Deine Notizen werden lokal gespeichert, damit du nach dem Termin die Antworten
+      eintragen und den Bogen erneut ausdrucken kannst.</p>
+    <div id="consultBody"></div>
+  </div>
+</section>
+
+<!-- ============ DATEN ============ -->
+<section class="tabpanel" id="tab-data" hidden>
+  <div class="notice warn">
+    <p><strong>Wo deine Daten liegen.</strong> Ausschließlich in diesem Browser auf diesem Gerät
+      (<code>localStorage</code>). Nichts wird an einen Server, an GitHub oder an sonst jemanden übertragen —
+      diese Seite lädt keine einzige externe Datei. Das bedeutet aber auch: Wenn du den Browser-Speicher
+      löschst, den privaten Modus benutzt oder das Gerät wechselst, sind die Einträge weg.
+      <strong>Sichere deine Daten daher regelmäßig als JSON-Datei.</strong></p>
+  </div>
+  <div class="card">
+    <h2>Sicherung</h2>
+    <div class="row">
+      <button class="btn primary" id="btnBackup">Alle Daten als JSON sichern</button>
+      <button class="btn" id="btnRestore">Sicherung einlesen</button>
+      <input type="file" id="fileRestore" accept="application/json,.json" hidden>
+    </div>
+    <p class="small" style="margin-top:.6rem" id="storageInfo"></p>
+  </div>
+  <div class="card">
+    <h2>Export für Ärzte und Kostenträger</h2>
+    <div class="row">
+      <button class="btn" id="btnCsv2">Tagebuch als CSV (Excel)</button>
+      <button class="btn" id="btnPrintAll">Gesamtdokumentation drucken</button>
+    </div>
+    <p class="small" style="margin-top:.6rem">Die Gesamtdokumentation enthält Dossier, Kennzahlen,
+      Fragebogen-Ergebnisse, den Schmerzverlauf als Diagramm und die vollständige Tabelle aller Einträge.
+      Das ist das Dokument, das du in der Sprechstunde übergibst.</p>
+  </div>
+  <div class="card">
+    <h2>Daten löschen</h2>
+    <p class="small">Unwiderruflich. Bitte vorher sichern.</p>
+    <button class="btn danger" id="btnWipe">Alle Daten in diesem Browser löschen</button>
+  </div>
+  <div class="card">
+    <h3>Rechtlicher Hinweis</h3>
+    <p class="small">Dieses Werkzeug dokumentiert deine eigenen Beobachtungen. Es stellt keine Diagnose,
+      ersetzt keine ärztliche Beratung und trifft keine Behandlungsentscheidung. Die enthaltenen Fragebögen
+      sind Selbsteinschätzungsinstrumente; die offizielle, validierte Fassung eines Scores erhältst du über
+      deine Behandler. Bei akuter Verschlechterung, Fieber, zunehmender Rötung, Wundsekret oder plötzlichem
+      Funktionsverlust gehört der Fuß sofort ärztlich untersucht.</p>
+  </div>
+</section>
+
+</main>
+
+<div id="printArea"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ============================================================
+   Schmerz- und Verlaufsdokumentation
+   Speicherung ausschliesslich lokal (localStorage). Keine Netzwerkzugriffe.
+   ============================================================ */
+
+const KEY = "schmerzdoku_v1";
+const NOW = () => new Date();
+const todayISO = () => { const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0,10); };
+
+/* ---------- Storage (mit Fallback, falls localStorage blockiert) ---------- */
+let memStore = null;
+function canStore(){ try{ localStorage.setItem("__t","1"); localStorage.removeItem("__t"); return true; }catch(e){ return false; } }
+const HAS_LS = canStore();
+
+function blank(){
+  return { version:1, created:new Date().toISOString(), entries:[], quests:[], dossier:{ ops:[], imaging:[], therapies:[] }, consult:{} };
+}
+function load(){
+  try{
+    const raw = HAS_LS ? localStorage.getItem(KEY) : memStore;
+    if(!raw) return blank();
+    const o = JSON.parse(raw);
+    o.entries  = o.entries  || [];
+    o.quests   = o.quests   || [];
+    o.dossier  = o.dossier  || {};
+    o.dossier.ops        = o.dossier.ops        || [];
+    o.dossier.imaging    = o.dossier.imaging    || [];
+    o.dossier.therapies  = o.dossier.therapies  || [];
+    o.consult  = o.consult  || {};
+    return o;
+  }catch(e){ console.warn("Laden fehlgeschlagen", e); return blank(); }
+}
+let DB = load();
+function save(){
+  const raw = JSON.stringify(DB);
+  try{ if(HAS_LS) localStorage.setItem(KEY, raw); else memStore = raw; }
+  catch(e){ toast("Speicher voll oder blockiert — bitte Daten sichern und alte Einträge exportieren."); }
+}
+
+/* ---------- Helpers ---------- */
+const $  = (s,r=document) => r.querySelector(s);
+const $$ = (s,r=document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const nl2br = s => esc(s).replace(/\n/g,"<br>");
+const num = v => { const n = parseFloat(v); return Number.isFinite(n) ? n : null; };
+const round1 = n => Math.round(n*10)/10;
+const deDate = iso => { if(!iso) return "—"; const p = String(iso).split("-"); return p.length===3 ? `${p[2]}.${p[1]}.${p[0]}` : iso; };
+const mean = a => a.length ? a.reduce((x,y)=>x+y,0)/a.length : null;
+function toast(msg){ const t=$("#toast"); t.textContent = String(msg).length>140 ? String(msg).slice(0,137)+"…" : msg; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),2600); }
+function lvl(v){ return v<=2?0 : v<=4?1 : v<=6?2 : 3; }
+function n100(v){ return v==null ? "—" : Math.round(v*10); }
+
+/* ---------- Tabs ---------- */
+$$("nav.tabs button").forEach(b => b.addEventListener("click", () => showTab(b.dataset.tab)));
+function showTab(id){
+  $$("nav.tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.tab===id)));
+  $$("section.tabpanel").forEach(s => { s.hidden = (s.id !== "tab-"+id); });
+  window.scrollTo({top:0,behavior:"instant"});
+  if(id==="dash"){ renderStats(); renderCharts(); renderPatterns(); }
+  if(id==="history") renderHistory();
+  if(id==="quest") renderQuestTable();
+}
+
+/* ---------- Auswahl-Chips ---------- */
+const CHAR_OPTS  = ["dumpf / drückend","stechend","brennend","elektrisierend / einschießend","pochend / pulsierend",
+                    "Berührung schon schmerzhaft","Taubheit / Kribbeln","Krampfartig","Tief im Knochen"];
+const LOC_OPTS   = ["Ferse","Fußsohle","Außenknöchel","Innenknöchel","Fußrücken","Narbenbereich","ganzer Fuß","aufsteigend in den Unterschenkel"];
+const SIGN_OPTS  = ["Wunde / Sekret","Überwärmung","vermehrtes Schwitzen","Nagel- oder Haarveränderung","Haut glänzend/dünn","Muskelzucken / Zittern","Bewegungsumfang schlechter","Materialdruck spürbar"];
+const UNABLE_OPTS= ["Einkaufen","Arbeiten","Haushalt","Duschen im Stehen","Treppe","Autofahren","Verabredung abgesagt","Kinderbetreuung","Sport / Bewegung","Schlafen durchgehend"];
+const SIDE_OPTS  = ["Müdigkeit","Übelkeit","Verstopfung","Schwindel","Konzentrationsprobleme","Magenbeschwerden","keine"];
+
+function renderChips(container, opts, name){
+  container.innerHTML = opts.map((o,i)=>
+    `<label class="chip"><input type="checkbox" name="${name}" value="${esc(o)}" id="${name}_${i}">${esc(o)}</label>`
+  ).join("");
+}
+function chipVals(name){ return $$(`input[name="${name}"]:checked`).map(i=>i.value); }
+function setChips(name, vals){ const v = vals||[]; $$(`input[name="${name}"]`).forEach(i=> i.checked = v.includes(i.value)); }
+
+renderChips($("#chips_char"),   CHAR_OPTS,   "char");
+renderChips($("#chips_loc"),    LOC_OPTS,    "loc");
+renderChips($("#chips_signs"),  SIGN_OPTS,   "sign");
+renderChips($("#chips_unable"), UNABLE_OPTS, "unable");
+renderChips($("#chips_side"),   SIDE_OPTS,   "side");
+
+/* ---------- Slider-Anzeigen ---------- */
+function bindSlider(id){
+  const el = $("#"+id), out = $("#v_"+id);
+  if(!el||!out) return;
+  const upd = () => { const v=+el.value; out.textContent=v; out.className="slider-val lvl-"+lvl(v); };
+  el.addEventListener("input", () => { upd(); if(id==="e_rest"||id==="e_load"||id==="e_max") autoMax(); checkRedFlags(); });
+  upd();
+}
+["e_rest","e_load","e_max","e_sleepQual","e_impair","e_medEffect","e_burden"].forEach(bindSlider);
+function autoMax(){
+  const r=+$("#e_rest").value, l=+$("#e_load").value, m=$("#e_max");
+  if(+m.value < Math.max(r,l)){ m.value = Math.max(r,l); m.dispatchEvent(new Event("input")); }
+}
+
+/* ---------- Medikamentenzeilen ---------- */
+function medRow(data){
+  const d = data||{name:"",dose:"",times:""};
+  const wrap = document.createElement("div");
+  wrap.className = "repeat-row";
+  wrap.style.gridTemplateColumns = "2fr 1fr 1fr auto";
+  wrap.innerHTML = `
+    <div><label>Präparat / Wirkstoff</label><input type="text" class="m-name" value="${esc(d.name)}" placeholder="z. B. Tilidin"></div>
+    <div><label>Dosis</label><input type="text" class="m-dose" value="${esc(d.dose)}" placeholder="z. B. 100 mg"></div>
+    <div><label>Einnahmen heute</label><input type="number" class="m-times" min="0" max="24" value="${esc(d.times)}"></div>
+    <div class="rm"><button type="button" class="btn mini danger">Entfernen</button></div>`;
+  wrap.querySelector("button").addEventListener("click", ()=>wrap.remove());
+  return wrap;
+}
+$("#addMed").addEventListener("click", ()=> $("#medRows").appendChild(medRow()));
+function readMeds(){
+  return $$("#medRows .repeat-row").map(r=>({
+    name: r.querySelector(".m-name").value.trim(),
+    dose: r.querySelector(".m-dose").value.trim(),
+    times: r.querySelector(".m-times").value
+  })).filter(m=>m.name);
+}
+
+/* ---------- Warnzeichen ---------- */
+function checkRedFlags(){
+  const box=$("#redFlagBox"); const flags=[];
+  const signs = chipVals("sign");
+  if(signs.includes("Wunde / Sekret")) flags.push("Wundsekret bei einliegendem Osteosynthesematerial ist ein Infektzeichen. Das gehört zeitnah untersucht, nicht abgewartet.");
+  if(signs.includes("Überwärmung") && (+$("#e_swell").value)>=2) flags.push("Deutliche Schwellung zusammen mit Überwärmung kann auf einen Infekt hinweisen — bitte ärztlich abklären lassen.");
+  if(+$("#e_rest").value>=8) flags.push("Ruheschmerz ab 8 ist auch bei deiner Vorgeschichte ungewöhnlich hoch. Notiere, ob er dauerhaft so bleibt — das ist ein Argument für eine schmerzmedizinische Neubewertung.");
+  const ch = chipVals("char");
+  if(ch.includes("Berührung schon schmerzhaft") || ch.includes("elektrisierend / einschießend") || ch.includes("brennend"))
+    flags.push("Brennender, einschießender oder berührungsempfindlicher Schmerz spricht für eine Nervenbeteiligung. Fülle den Bogen „Neuropathischer Schmerz / CRPS“ unter Fragebögen aus.");
+  if(!flags.length){ box.hidden=true; return; }
+  box.hidden=false;
+  box.innerHTML = "<strong>Hinweise zu deinen heutigen Angaben</strong><ul style='margin:.4rem 0 0 1.1rem;padding:0'>"+flags.map(f=>`<li>${esc(f)}</li>`).join("")+"</ul>";
+}
+["#e_swell","#chips_sign","#chips_char"].forEach(()=>{});
+$("#e_swell").addEventListener("change", checkRedFlags);
+$("#chips_signs").addEventListener("change", checkRedFlags);
+$("#chips_char").addEventListener("change", checkRedFlags);
+
+/* ---------- Eintrag speichern / laden ---------- */
+function collectEntry(){
+  return {
+    date:      $("#e_date").value,
+    context:   $("#e_context").value,
+    rest:      +$("#e_rest").value,
+    load:      +$("#e_load").value,
+    max:       +$("#e_max").value,
+    character: chipVals("char"),
+    location:  chipVals("loc"),
+    nightWakes:num($("#e_nightWakes").value) ?? 0,
+    wakeTime:  $("#e_wakeTime").value,
+    sleep:     num($("#e_sleep").value),
+    sleepQual: +$("#e_sleepQual").value,
+    walk:      num($("#e_walk").value),
+    stand:     num($("#e_stand").value),
+    aid:       $("#e_aid").value,
+    stairs:    $("#e_stairs").value,
+    impair:    +$("#e_impair").value,
+    unable:    chipVals("unable"),
+    swell:     +$("#e_swell").value,
+    temp:      $("#e_temp").value,
+    color:     $("#e_color").value,
+    signs:     chipVals("sign"),
+    meds:      readMeds(),
+    medEffect: +$("#e_medEffect").value,
+    sideFx:    chipVals("side"),
+    burden:    +$("#e_burden").value,
+    note:      $("#e_note").value.trim(),
+    saved:     new Date().toISOString()
+  };
+}
+function fillEntry(e){
+  $("#e_date").value = e.date || todayISO();
+  $("#e_context").value = e.context || "";
+  ["rest","load","max"].forEach(k=>{ const el=$("#e_"+k); el.value = e[k] ?? 0; el.dispatchEvent(new Event("input")); });
+  setChips("char", e.character); setChips("loc", e.location); setChips("sign", e.signs);
+  setChips("unable", e.unable);  setChips("side", e.sideFx);
+  $("#e_nightWakes").value = e.nightWakes ?? 0;
+  $("#e_wakeTime").value = e.wakeTime || "";
+  $("#e_sleep").value = e.sleep ?? "";
+  $("#e_sleepQual").value = e.sleepQual ?? 5; $("#e_sleepQual").dispatchEvent(new Event("input"));
+  $("#e_walk").value = e.walk ?? ""; $("#e_stand").value = e.stand ?? "";
+  $("#e_aid").value = e.aid || "keine"; $("#e_stairs").value = e.stairs || "";
+  $("#e_impair").value = e.impair ?? 0; $("#e_impair").dispatchEvent(new Event("input"));
+  $("#e_swell").value = String(e.swell ?? 0);
+  $("#e_temp").value = e.temp || ""; $("#e_color").value = e.color || "";
+  $("#medRows").innerHTML = ""; (e.meds||[]).forEach(m=>$("#medRows").appendChild(medRow(m)));
+  $("#e_medEffect").value = e.medEffect ?? 0; $("#e_medEffect").dispatchEvent(new Event("input"));
+  $("#e_burden").value = e.burden ?? 0; $("#e_burden").dispatchEvent(new Event("input"));
+  $("#e_note").value = e.note || "";
+  checkRedFlags();
+}
+function resetEntry(){
+  $("#entryForm").reset();
+  $("#e_date").value = todayISO();
+  ["e_rest","e_load","e_max","e_impair","e_medEffect","e_burden"].forEach(id=>{ $("#"+id).value=0; $("#"+id).dispatchEvent(new Event("input")); });
+  $("#e_sleepQual").value=5; $("#e_sleepQual").dispatchEvent(new Event("input"));
+  ["char","loc","sign","unable","side"].forEach(n=>setChips(n,[]));
+  $("#medRows").innerHTML="";
+  checkRedFlags();
+  refreshEntryStatus();
+}
+function refreshEntryStatus(){
+  const d = $("#e_date").value;
+  const ex = DB.entries.find(x=>x.date===d);
+  $("#entryTitle").textContent = ex ? "Eintrag bearbeiten" : "Neuer Tageseintrag";
+  $("#entryStatus").textContent = ex ? "Für dieses Datum existiert bereits ein Eintrag — Speichern überschreibt ihn." : "";
+}
+$("#e_date").addEventListener("change", ()=>{
+  const ex = DB.entries.find(x=>x.date===$("#e_date").value);
+  if(ex && confirm("Für dieses Datum gibt es schon einen Eintrag. Möchtest du ihn zum Bearbeiten laden?")) fillEntry(ex);
+  refreshEntryStatus();
+});
+$("#entryReset").addEventListener("click", resetEntry);
+$("#entryForm").addEventListener("submit", ev=>{
+  ev.preventDefault();
+  const e = collectEntry();
+  if(!e.date){ toast("Bitte ein Datum angeben."); return; }
+  const i = DB.entries.findIndex(x=>x.date===e.date);
+  if(i>=0) DB.entries[i]=e; else DB.entries.push(e);
+  DB.entries.sort((a,b)=> a.date < b.date ? -1 : 1);
+  save();
+  toast("Eintrag für "+deDate(e.date)+" gespeichert.");
+  $("#saveHint").textContent = "Zuletzt gespeichert: " + new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"});
+  refreshEntryStatus(); renderStats(); renderCharts(); renderPatterns();
+});
+
+/* ---------- Auswertung ---------- */
+function inRange(days){
+  if(days>=9999) return DB.entries.slice();
+  const cut = new Date(); cut.setDate(cut.getDate()-days+1);
+  const c = cut.toISOString().slice(0,10);
+  return DB.entries.filter(e=> e.date >= c);
+}
+function agg(list){
+  const g = k => list.map(e=>e[k]).filter(v=>typeof v==="number" && Number.isFinite(v));
+  const rest=g("rest"), load=g("load"), mx=g("max"), walk=g("walk"), stand=g("stand"), imp=g("impair"), bur=g("burden");
+  const nights = list.filter(e=>(e.nightWakes||0)>0).length;
+  const medDays = list.filter(e=>(e.meds||[]).some(m=>+m.times>0)).length;
+  const aidDays = list.filter(e=> e.aid && e.aid!=="keine").length;
+  const wakeTimes = list.map(e=>e.wakeTime).filter(Boolean);
+  let avgWake = null;
+  if(wakeTimes.length){
+    const mins = wakeTimes.map(t=>{ const [h,m]=t.split(":").map(Number); return h*60+m; });
+    const a = Math.round(mean(mins));
+    avgWake = String(Math.floor(a/60)).padStart(2,"0")+":"+String(a%60).padStart(2,"0");
+  }
+  return {
+    n:list.length,
+    rest:mean(rest), load:mean(load), max:mean(mx),
+    restMax: rest.length?Math.max(...rest):null, loadMax: load.length?Math.max(...load):null,
+    restMin: rest.length?Math.min(...rest):null, loadMin: load.length?Math.min(...load):null,
+    walk:mean(walk), walkMin: walk.length?Math.min(...walk):null, walkMax: walk.length?Math.max(...walk):null,
+    stand:mean(stand), impair:mean(imp), burden:mean(bur),
+    nights, nightPct: list.length?Math.round(nights/list.length*100):0,
+    medDays, medPct: list.length?Math.round(medDays/list.length*100):0,
+    aidDays, aidPct: list.length?Math.round(aidDays/list.length*100):0,
+    avgWake
+  };
+}
+function statCard(k,v,u,d){
+  return `<div class="stat"><div class="k">${esc(k)}</div><div class="v">${v}<span class="u">${esc(u||"")}</span></div><div class="d">${esc(d||"")}</div></div>`;
+}
+function renderStats(){
+  $("#emptyHint").hidden = DB.entries.length>0;
+  const days = +$("#statRange").value;
+  const a = agg(inRange(days));
+  const f = v => v==null ? "—" : round1(v);
+  $("#statGrid").innerHTML = [
+    statCard("Erfasste Tage", a.n, "", days>=9999?"gesamter Verlauf":"von "+days),
+    statCard("Ø Ruheschmerz", f(a.rest), "/10", a.rest==null?"":`entspricht ${n100(a.rest)}/100 · Spanne ${a.restMin}–${a.restMax}`),
+    statCard("Ø Belastungsschmerz", f(a.load), "/10", a.load==null?"":`entspricht ${n100(a.load)}/100 · Spanne ${a.loadMin}–${a.loadMax}`),
+    statCard("Ø Tagesmaximum", f(a.max), "/10", a.max==null?"":`entspricht ${n100(a.max)}/100`),
+    statCard("Nächte mit Schmerz­erwachen", a.nightPct, "%", `${a.nights} von ${a.n} Nächten` + (a.avgWake?` · Ø endgültig wach ${a.avgWake} Uhr`:"")),
+    statCard("Ø Gehstrecke", a.walk==null?"—":Math.round(a.walk), " m", a.walk==null?"":`Spanne ${a.walkMin}–${a.walkMax} m`),
+    statCard("Ø Stehdauer", a.stand==null?"—":Math.round(a.stand), " min", ""),
+    statCard("Tage mit Schmerzmitteln", a.medPct, "%", `${a.medDays} von ${a.n} Tagen`),
+    statCard("Tage mit Gehhilfe", a.aidPct, "%", `${a.aidDays} von ${a.n} Tagen`),
+    statCard("Ø Alltags­beeinträchtigung", f(a.impair), "/10", ""),
+    statCard("Ø seelische Belastung", f(a.burden), "/10", "")
+  ].join("");
+}
+$("#statRange").addEventListener("change", ()=>{ renderStats(); renderCharts(); renderPatterns(); });
+
+/* ---------- SVG-Diagramme (ohne externe Bibliotheken) ---------- */
+function lineChart(data, series, opts){
+  const W=760, H=opts.h||240, ML=44, MR=14, MT=14, MB=42;
+  const iw=W-ML-MR, ih=H-MT-MB;
+  if(!data.length) return `<p class="small">Noch keine Daten für diesen Zeitraum.</p>`;
+  const yMax = opts.yMax ?? Math.max(1, ...series.flatMap(s=>data.map(d=>d[s.key]).filter(v=>v!=null)));
+  const n = data.length;
+  const X = i => ML + (n===1 ? iw/2 : i*iw/(n-1));
+  const Y = v => MT + ih - (v/yMax)*ih;
+  let g = "";
+  const ticks = opts.ticks || 5;
+  for(let t=0;t<=ticks;t++){
+    const val = yMax*t/ticks, y = Y(val);
+    g += `<line x1="${ML}" y1="${y.toFixed(1)}" x2="${W-MR}" y2="${y.toFixed(1)}" stroke="#e6e9ed" stroke-width="1"/>`;
+    g += `<text x="${ML-7}" y="${(y+4).toFixed(1)}" text-anchor="end" font-size="10" fill="#78828d">${Math.round(val*10)/10}</text>`;
+  }
+  (opts.marks||[]).forEach(i=>{ const x=X(i); g+=`<rect x="${(x-2.5).toFixed(1)}" y="${MT}" width="5" height="${ih}" fill="#c8ccd1" opacity=".38"/>`; });
+  const step = Math.max(1, Math.ceil(n/9));
+  data.forEach((d,i)=>{ if(i%step===0 || i===n-1){
+    g += `<text x="${X(i).toFixed(1)}" y="${H-MB+16}" text-anchor="middle" font-size="9.5" fill="#78828d">${esc(deDate(d.date).slice(0,6))}</text>`;
+  }});
+  series.forEach(s=>{
+    const pts = data.map((d,i)=> d[s.key]==null ? null : [X(i),Y(d[s.key])]);
+    let path="", pen=false;
+    pts.forEach(p=>{ if(!p){ pen=false; return; } path += (pen?" L ":" M ")+p[0].toFixed(1)+" "+p[1].toFixed(1); pen=true; });
+    g += `<path d="${path}" fill="none" stroke="${s.color}" stroke-width="${s.w||2.2}" stroke-linejoin="round" stroke-linecap="round" ${s.dash?`stroke-dasharray="${s.dash}"`:""}/>`;
+    if(n<=45) pts.forEach(p=>{ if(p) g += `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2.6" fill="${s.color}"/>`; });
+  });
+  g += `<line x1="${ML}" y1="${MT+ih}" x2="${W-MR}" y2="${MT+ih}" stroke="#b9c0c8" stroke-width="1"/>`;
+  if(opts.yLabel) g += `<text x="12" y="${MT+ih/2}" font-size="10" fill="#78828d" transform="rotate(-90 12 ${MT+ih/2})" text-anchor="middle">${esc(opts.yLabel)}</text>`;
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opts.aria||"Diagramm")}">${g}</svg>`;
+}
+function chartData(){
+  const days=+$("#statRange").value;
+  return inRange(days).slice().sort((a,b)=> a.date<b.date?-1:1);
+}
+function renderCharts(){
+  const d = chartData();
+  const marks = d.map((e,i)=> (e.nightWakes||0)>0 ? i : -1).filter(i=>i>=0);
+  $("#chartPain").innerHTML = lineChart(d, [
+    {key:"rest", color:"#1f5f8b"},
+    {key:"load", color:"#a8471c"},
+    {key:"max",  color:"#9b2c2c", w:1.4, dash:"4 3"}
+  ], {yMax:10, ticks:5, yLabel:"NRS 0–10", marks, aria:"Schmerzverlauf über die Zeit", h:250});
+  // getrennte Skalen: Meter und Minuten liegen um Groessenordnungen auseinander
+  $("#chartFunc").innerHTML =
+      lineChart(d, [{key:"walk", color:"#2c6e49"}],
+        {ticks:4, yLabel:"Gehstrecke in Metern", aria:"Schmerzfreie Gehstrecke über die Zeit", h:180})
+    + lineChart(d, [{key:"stand", color:"#7a5195"}],
+        {ticks:4, yLabel:"Stehdauer in Minuten", aria:"Stehdauer über die Zeit", h:180});
+}
+
+/* ---------- Muster-Erkennung ---------- */
+function renderPatterns(){
+  const days=+$("#statRange").value, list=inRange(days), a=agg(list), out=[];
+  if(list.length<3){ $("#patterns").innerHTML = `<p class="small">Ab etwa drei Einträgen erscheinen hier automatisch erkannte Muster.</p>`; return; }
+  if(a.rest!=null && a.load!=null){
+    const gap = a.load - a.rest;
+    if(gap>=3) out.push(["mid", `Belastungsabhängigkeit deutlich: Der Schmerz steigt unter Belastung im Mittel um ${round1(gap)} Punkte (Ruhe ${round1(a.rest)} → Belastung ${round1(a.load)}). Das ist das typische Muster einer mechanischen Ursache, also Pseudarthrose oder gelockertes Material — und ein starkes Argument dafür, dass Schmerzmittel allein das Problem nicht lösen.`]);
+    if(a.rest>=4) out.push(["bad", `Auch in Ruhe besteht ein Dauerschmerz von im Mittel ${round1(a.rest)}/10 (${n100(a.rest)}/100). Ruheschmerz in dieser Höhe lässt sich nicht durch Schonung wegnehmen und ist medizinisch relevanter als hoher Belastungsschmerz allein.`]);
+  }
+  if(a.nightPct>=40) out.push(["bad", `In ${a.nightPct} % der dokumentierten Nächte wachst du wegen der Schmerzen auf${a.avgWake?`, im Mittel bist du ab ${a.avgWake} Uhr endgültig wach`:""}. Nachtschmerz ist eines der Kriterien, das Chirurgen bei der Dringlichkeitsbeurteilung am ernstesten nehmen.`]);
+  if(a.walk!=null && a.walk<300) out.push(["bad", `Die durchschnittliche Gehstrecke liegt bei ${Math.round(a.walk)} Metern. Zum Einordnen: Für eine selbstständige Alltagsbewältigung ohne fremde Hilfe werden üblicherweise mindestens 500 Meter am Stück angesetzt.`]);
+  if(a.aidPct>=50) out.push(["mid", `An ${a.aidPct} % der Tage brauchst du ein Hilfsmittel. Das gehört wörtlich in den AOFAS-Score und in jede sozialmedizinische Beurteilung.`]);
+  if(a.medPct>=70) out.push(["mid", `An ${a.medPct} % der Tage nimmst du Schmerzmittel. Bei Dauergebrauch über Monate sollte eine schmerzmedizinische Mitbetreuung dokumentiert sein — falls nicht vorhanden, ist das ein eigener Punkt fürs Arztgespräch.`]);
+  const neuro = list.filter(e=>(e.character||[]).some(c=>/brennend|elektris|Berührung|Taubheit/.test(c))).length;
+  if(neuro/list.length>=0.4) out.push(["mid", `An ${Math.round(neuro/list.length*100)} % der Tage beschreibst du brennende, einschießende oder berührungsempfindliche Schmerzen. Das spricht für eine Nervenkomponente, die anders behandelt wird als Knochenschmerz — und die vor einer Amputationsentscheidung geklärt sein sollte, weil sie sonst als Phantom- oder Stumpfschmerz fortbestehen kann.`]);
+  const crps = list.filter(e=> e.temp && e.temp!=="gleich" || e.color && e.color!=="gleich").length;
+  if(crps/list.length>=0.4) out.push(["mid", `An ${Math.round(crps/list.length*100)} % der Tage dokumentierst du Temperatur- oder Farbunterschiede im Seitenvergleich. Bitte den Bogen „Neuropathischer Schmerz / CRPS“ ausfüllen und das Ergebnis gezielt ansprechen.`]);
+  if(a.burden!=null && a.burden>=6) out.push(["bad", `Die seelische Belastung liegt im Mittel bei ${round1(a.burden)}/10. Das gehört ins Dossier — nicht als Schwäche, sondern weil die psychische Belastung ein anerkanntes Kriterium bei der Indikationsstellung für eine elektive Amputation nach gescheitertem Extremitätenerhalt ist.`]);
+  const half = Math.floor(list.length/2);
+  if(list.length>=10){
+    const r1 = mean(list.slice(0,half).map(e=>e.load).filter(v=>v!=null));
+    const r2 = mean(list.slice(half).map(e=>e.load).filter(v=>v!=null));
+    if(r1!=null && r2!=null && r2-r1>=1) out.push(["bad", `Trend: Der Belastungsschmerz ist in der zweiten Hälfte des Zeitraums um ${round1(r2-r1)} Punkte höher als in der ersten. Eine dokumentierte Verschlechterung wiegt im Gespräch schwerer als ein hoher Einzelwert.`]);
+    if(r1!=null && r2!=null && r1-r2>=1) out.push(["ok", `Trend: Der Belastungsschmerz ist zuletzt um ${round1(r1-r2)} Punkte niedriger als zu Beginn des Zeitraums. Halte fest, woran das lag — das ist genauso wichtig wie die schlechten Phasen.`]);
+  }
+  $("#patterns").innerHTML = out.length
+    ? out.map(([b,t])=>`<p style="margin-bottom:.6rem"><span class="badge ${b}">${b==="ok"?"positiv":b==="mid"?"beachten":"gewichtig"}</span> ${esc(t)}</p>`).join("")
+    : `<p class="small">Bisher keine auffälligen Muster in diesem Zeitraum.</p>`;
+}
+
+/* ---------- Verlaufstabelle ---------- */
+function renderHistory(){
+  const t=$("#histTable");
+  if(!DB.entries.length){ t.innerHTML = `<tbody><tr><td class="small">Noch keine Einträge.</td></tr></tbody>`; return; }
+  const rows = DB.entries.slice().reverse().map(e=>`
+    <tr>
+      <td>${deDate(e.date)}</td>
+      <td class="num">${e.rest??"—"}</td>
+      <td class="num">${e.load??"—"}</td>
+      <td class="num">${e.max??"—"}</td>
+      <td class="num">${e.nightWakes||0}${e.wakeTime?` <span class="small">(${esc(e.wakeTime)})</span>`:""}</td>
+      <td class="num">${e.walk??"—"}</td>
+      <td class="num">${e.stand??"—"}</td>
+      <td>${esc(e.aid||"—")}</td>
+      <td class="num">${e.impair??"—"}</td>
+      <td>${esc((e.meds||[]).map(m=>m.name+(m.times?` ×${m.times}`:"")).join(", ")||"—")}</td>
+      <td>${esc(e.note||"")}</td>
+      <td><button class="btn mini" data-edit="${esc(e.date)}">Bearbeiten</button>
+          <button class="btn mini danger" data-del="${esc(e.date)}">Löschen</button></td>
+    </tr>`).join("");
+  t.innerHTML = `<thead><tr>
+      <th>Datum</th><th>Ruhe</th><th>Belast.</th><th>Max</th><th>Nacht</th>
+      <th>Geh&nbsp;m</th><th>Steh&nbsp;min</th><th>Hilfsmittel</th><th>Alltag</th><th>Medikation</th><th>Notiz</th><th></th>
+    </tr></thead><tbody>${rows}</tbody>`;
+  $$("[data-edit]",t).forEach(b=>b.addEventListener("click",()=>{
+    const e=DB.entries.find(x=>x.date===b.dataset.edit); if(e){ fillEntry(e); showTab("entry"); refreshEntryStatus(); }
+  }));
+  $$("[data-del]",t).forEach(b=>b.addEventListener("click",()=>{
+    if(!confirm("Eintrag vom "+deDate(b.dataset.del)+" löschen?")) return;
+    DB.entries = DB.entries.filter(x=>x.date!==b.dataset.del); save(); renderHistory(); renderStats(); renderCharts(); renderPatterns();
+  }));
+}
+
+/* ============================================================
+   FRAGEBÖGEN
+   ============================================================ */
+const SC_NRS11 = Array.from({length:11},(_,i)=>({v:i,l:String(i)}));
+const SC_DIFF  = [{v:0,l:"keine Schwierigkeit"},{v:2,l:"leicht"},{v:4,l:"mäßig"},{v:6,l:"deutlich"},{v:8,l:"stark"},{v:10,l:"nicht möglich"}];
+const SC_TIME  = [{v:0,l:"nie"},{v:2,l:"selten"},{v:4,l:"manchmal"},{v:6,l:"oft"},{v:8,l:"meistens"},{v:10,l:"immer"}];
+const SC_PROMIS= [{v:1,l:"überhaupt nicht"},{v:2,l:"ein wenig"},{v:3,l:"mäßig"},{v:4,l:"ziemlich"},{v:5,l:"sehr stark"}];
+const SC_PHQ   = [{v:0,l:"überhaupt nicht"},{v:1,l:"an einzelnen Tagen"},{v:2,l:"an mehr als der Hälfte der Tage"},{v:3,l:"beinahe jeden Tag"}];
+const SC_YN    = [{v:0,l:"nein"},{v:1,l:"ja"}];
+
+const QUESTS = {
+  ffi: {
+    title: "Fuß-Funktions-Index (FFI-orientiert)",
+    intro: "23 Fragen, etwa 5 Minuten. Bezieht sich auf die vergangene Woche. Ergibt drei Prozentwerte: Schmerz, Funktionseinschränkung und Aktivitätseinschränkung. Struktur nach Budiman-Mak et al. (1991); für formale Gutachten bitte die offizielle validierte Fassung über die Behandler beziehen.",
+    groups: [
+      {name:"Schmerz", key:"pain", scale:SC_NRS11, lead:"Wie stark war der Schmerz in Ihrem betroffenen Fuß in der vergangenen Woche …", items:[
+        "… wenn er am schlimmsten war?","… morgens direkt nach dem Aufstehen?","… beim Barfußgehen?","… beim Barfußstehen?",
+        "… beim Gehen mit Schuhen?","… beim Stehen mit Schuhen?","… beim Gehen mit Einlage oder Orthese?",
+        "… beim Stehen mit Einlage oder Orthese?","… am Ende des Tages?"]},
+      {name:"Funktionseinschränkung", key:"dis", scale:SC_DIFF, lead:"Wie schwer fiel Ihnen in der vergangenen Woche …", items:[
+        "… das Gehen in der Wohnung?","… das Gehen draußen auf unebenem Boden?","… das Gehen von mehr als 400 Metern?",
+        "… das Treppensteigen aufwärts?","… das Treppensteigen abwärts?","… auf Zehenspitzen zu stehen?",
+        "… das Aufstehen von einem Stuhl?","… das Überwinden von Bordsteinkanten?","… schnelles Gehen oder Laufen?"]},
+      {name:"Aktivitätseinschränkung", key:"act", scale:SC_TIME, lead:"Wie oft trat in der vergangenen Woche Folgendes ein …", items:[
+        "… Sie blieben wegen des Fußes den ganzen Tag zu Hause.","… Sie blieben wegen des Fußes den ganzen Tag im Bett.",
+        "… Sie mussten Ihre körperliche Aktivität einschränken.","… Sie brauchten in der Wohnung ein Hilfsmittel.",
+        "… Sie brauchten draußen ein Hilfsmittel."]}
+    ],
+    score(ans){
+      const sub={}; let all=0, allMax=0;
+      this.groups.forEach(g=>{
+        let s=0,m=0;
+        g.items.forEach((_,i)=>{ const v=ans[g.key+i]; if(v!=null){ s+=v; m+=10; } });
+        sub[g.name] = m? Math.round(s/m*1000)/10 : null;
+        all+=s; allMax+=m;
+      });
+      const total = allMax? Math.round(all/allMax*1000)/10 : null;
+      return {total, unit:"%", sub, interp: total==null?"":
+        total<20?"gering ausgeprägte Fußbeschwerden" : total<40?"mäßige Fußbeschwerden" :
+        total<60?"ausgeprägte Fußbeschwerden" : total<80?"schwere Fußbeschwerden" : "sehr schwere Fußbeschwerden, weitgehender Funktionsverlust",
+        higherWorse:true};
+    }
+  },
+
+  aofas: {
+    title: "AOFAS Ankle-Hindfoot Score",
+    intro: "Der im Rückfußbereich international gebräuchlichste Score, 0 bis 100 Punkte — je höher, desto besser. Drei Items (Beweglichkeit, Stabilität, Achsstellung) werden eigentlich vom Arzt gemessen; schätze sie selbst ein oder lass sie beim nächsten Termin ausfüllen.",
+    single: true,
+    items: [
+      {q:"Schmerz", key:"pain", opts:[{v:40,l:"kein Schmerz"},{v:30,l:"leicht, gelegentlich"},{v:20,l:"mäßig, täglich"},{v:0,l:"stark, fast ständig"}]},
+      {q:"Aktivitätseinschränkung und Hilfsmittelbedarf", key:"act", opts:[
+        {v:10,l:"keine Einschränkung, kein Hilfsmittel"},
+        {v:7,l:"Alltag uneingeschränkt, Freizeitaktivitäten eingeschränkt, kein Hilfsmittel"},
+        {v:4,l:"Alltag und Freizeit eingeschränkt, Gehstock"},
+        {v:0,l:"schwere Einschränkung, Gehstützen, Rollator, Rollstuhl oder Orthese"}]},
+      {q:"Maximale Gehstrecke", key:"walk", opts:[{v:5,l:"mehr als 600 m"},{v:4,l:"400 bis 600 m"},{v:2,l:"100 bis 300 m"},{v:0,l:"weniger als 100 m"}]},
+      {q:"Untergrund", key:"surf", opts:[{v:5,l:"keine Schwierigkeit auf jedem Untergrund"},{v:3,l:"gewisse Schwierigkeit auf unebenem Gelände, Treppen, Steigungen"},{v:0,l:"erhebliche Schwierigkeit auf unebenem Gelände, Treppen, Steigungen"}]},
+      {q:"Gangbild", key:"gait", opts:[{v:8,l:"unauffällig oder minimal hinkend"},{v:4,l:"deutlich hinkend"},{v:0,l:"ausgeprägt hinkend"}]},
+      {q:"Beweglichkeit Sprunggelenk, Heben und Senken zusammen", key:"rom", clin:true, opts:[{v:8,l:"normal oder gering eingeschränkt, 30° und mehr"},{v:4,l:"mäßig eingeschränkt, 15 bis 29°"},{v:0,l:"stark eingeschränkt, weniger als 15°"}]},
+      {q:"Beweglichkeit Rückfuß, Ein- und Auswärtsdrehung", key:"hind", clin:true, opts:[{v:6,l:"normal oder gering eingeschränkt, 75 bis 100 %"},{v:3,l:"mäßig eingeschränkt, 25 bis 74 %"},{v:0,l:"stark eingeschränkt, unter 25 %"}]},
+      {q:"Stabilität von Sprunggelenk und Rückfuß", key:"stab", clin:true, opts:[{v:8,l:"stabil"},{v:0,l:"instabil"}]},
+      {q:"Achsstellung des Fußes", key:"align", clin:true, opts:[{v:10,l:"gut, Fuß steht plan auf, Rückfuß gut ausgerichtet"},{v:5,l:"befriedigend, Fuß steht plan auf, leichte Fehlstellung ohne Beschwerden"},{v:0,l:"schlecht, Fuß steht nicht plan auf, deutliche Fehlstellung mit Beschwerden"}]}
+    ],
+    score(ans){
+      let s=0, done=0;
+      this.items.forEach(it=>{ const v=ans[it.key]; if(v!=null){ s+=v; done++; } });
+      return {total:s, unit:" von 100 Punkten", sub:{}, complete: done===this.items.length,
+        interp: s>=90?"ausgezeichnetes Ergebnis" : s>=75?"gutes Ergebnis" : s>=50?"befriedigendes Ergebnis" :
+                s>=25?"schlechtes Ergebnis" : "sehr schlechtes Ergebnis — in Studien der Bereich, in dem Rückzugsoptionen einschließlich Amputation diskutiert werden",
+        higherWorse:false};
+    }
+  },
+
+  promis: {
+    title: "Schmerzbedingte Beeinträchtigung (PROMIS-orientiert)",
+    intro: "Sechs kurze Fragen zu den letzten sieben Tagen. Misst nicht die Schmerzstärke, sondern wie sehr der Schmerz dein Leben blockiert — genau das, was Behandler bei der Dringlichkeit oft unterschätzen. Rohwert 6 bis 30.",
+    single:true, scale:SC_PROMIS,
+    lead:"Wie sehr hat der Schmerz in den vergangenen 7 Tagen …",
+    items:[
+      {q:"… Ihre alltäglichen Verrichtungen beeinträchtigt?", key:"p1"},
+      {q:"… Ihre Arbeit im Haushalt beeinträchtigt?", key:"p2"},
+      {q:"… Ihre Teilnahme an sozialen Aktivitäten beeinträchtigt?", key:"p3"},
+      {q:"… Ihre Hausarbeiten und Erledigungen beeinträchtigt?", key:"p4"},
+      {q:"… die Dinge beeinträchtigt, die Sie normalerweise zum Vergnügen tun?", key:"p5"},
+      {q:"… Ihre Lebensfreude beeinträchtigt?", key:"p6"}
+    ],
+    score(ans){
+      let s=0, done=0;
+      this.items.forEach(it=>{ const v=ans[it.key]; if(v!=null){ s+=v; done++; } });
+      return {total:s, unit:" von 30", sub:{}, complete:done===6,
+        interp: s<=9?"geringe Beeinträchtigung" : s<=15?"leichte Beeinträchtigung" : s<=21?"mäßige Beeinträchtigung" :
+                s<=26?"starke Beeinträchtigung" : "sehr starke Beeinträchtigung in nahezu allen Lebensbereichen",
+        higherWorse:true};
+    }
+  },
+
+  phq9: {
+    title: "PHQ-9 — seelische Belastung",
+    intro: "Neun Fragen zu den letzten zwei Wochen. Der PHQ-9 ist frei verwendbar und weltweit etabliert. Warum das hierher gehört: Bei einer geplanten elektiven Amputation wird die psychische Situation ausdrücklich mitbeurteilt. Ein dokumentierter, nachvollziehbarer Wert nimmt dem Thema die Unschärfe.",
+    single:true, scale:SC_PHQ,
+    lead:"Wie oft fühlten Sie sich im Verlauf der letzten 2 Wochen durch die folgenden Beschwerden beeinträchtigt?",
+    items:[
+      {q:"Wenig Interesse oder Freude an Ihren Tätigkeiten", key:"q1"},
+      {q:"Niedergeschlagenheit, Schwermut oder Hoffnungslosigkeit", key:"q2"},
+      {q:"Schwierigkeiten ein- oder durchzuschlafen oder vermehrter Schlaf", key:"q3"},
+      {q:"Müdigkeit oder das Gefühl, keine Energie zu haben", key:"q4"},
+      {q:"Verminderter Appetit oder übermäßiges Bedürfnis zu essen", key:"q5"},
+      {q:"Schlechte Meinung von sich selbst; das Gefühl, ein Versager zu sein oder die Familie enttäuscht zu haben", key:"q6"},
+      {q:"Schwierigkeiten, sich auf etwas zu konzentrieren, z. B. beim Zeitunglesen oder Fernsehen", key:"q7"},
+      {q:"Waren Ihre Bewegungen oder Ihre Sprache so verlangsamt, dass es anderen auffallen könnte? Oder waren Sie im Gegenteil zappelig oder ruhelos?", key:"q8"},
+      {q:"Gedanken, dass Sie lieber tot wären oder sich Leid zufügen möchten", key:"q9"}
+    ],
+    score(ans){
+      let s=0, done=0;
+      this.items.forEach(it=>{ const v=ans[it.key]; if(v!=null){ s+=v; done++; } });
+      return {total:s, unit:" von 27", sub:{}, complete:done===9, flag: (ans.q9||0)>0,
+        interp: s<=4?"unauffällig" : s<=9?"leichte depressive Symptomatik" : s<=14?"mittelgradige depressive Symptomatik" :
+                s<=19?"ausgeprägte depressive Symptomatik" : "schwere depressive Symptomatik",
+        higherWorse:true};
+    }
+  },
+
+  neuro: {
+    title: "Neuropathischer Schmerz und CRPS — Selbstbeobachtung",
+    intro: "Kein Diagnoseinstrument, sondern eine strukturierte Selbstbeobachtung entlang der vier Symptomgruppen der Budapest-Kriterien. Warum das gerade jetzt zählt: Wenn ein Teil deines Schmerzes vom Nerv und nicht vom Knochen kommt, verschwindet dieser Anteil durch eine Amputation nicht automatisch — er kann als Stumpf- oder Phantomschmerz weiterbestehen. Das muss vorher geklärt sein.",
+    single:true, scale:SC_YN,
+    lead:"Trifft das auf deinen betroffenen Fuß zu — im Vergleich zur gesunden Seite?",
+    items:[
+      {q:"Berührung, die eigentlich nicht wehtun sollte, ist schmerzhaft (z. B. Bettdecke, Socke)", key:"s1", cat:"Sensorik"},
+      {q:"Leichter Druck oder ein Nadelstich tut überproportional weh", key:"s2", cat:"Sensorik"},
+      {q:"Brennende, einschießende oder elektrisierende Schmerzattacken", key:"s3", cat:"Sensorik"},
+      {q:"Die Haut fühlt sich wärmer oder kälter an als auf der anderen Seite", key:"v1", cat:"Durchblutung"},
+      {q:"Die Hautfarbe unterscheidet sich (rötlich, bläulich, blass oder marmoriert)", key:"v2", cat:"Durchblutung"},
+      {q:"Der Fuß ist geschwollen, auch ohne besondere Belastung", key:"e1", cat:"Schwellung/Schwitzen"},
+      {q:"Der Fuß schwitzt anders als die Gegenseite", key:"e2", cat:"Schwellung/Schwitzen"},
+      {q:"Die Beweglichkeit ist zusätzlich eingeschränkt, ohne dass es allein am Knochen liegt", key:"m1", cat:"Motorik/Trophik"},
+      {q:"Zittern, Muskelzucken oder Kraftlosigkeit im Fuß oder Unterschenkel", key:"m2", cat:"Motorik/Trophik"},
+      {q:"Veränderungen an Haaren, Nägeln oder Hautbeschaffenheit im Vergleich zur Gegenseite", key:"m3", cat:"Motorik/Trophik"},
+      {q:"Der Schmerz geht über das hinaus, was durch den Befund allein erklärbar erscheint", key:"x1", cat:"Grundvoraussetzung"}
+    ],
+    score(ans){
+      const cats={}; let yes=0;
+      this.items.forEach(it=>{ if(ans[it.key]===1){ yes++; if(it.cat!=="Grundvoraussetzung") cats[it.cat]=true; } });
+      const nCat = Object.keys(cats).length;
+      return {total:nCat, unit:" von 4 Symptomgruppen", sub:{"Bejahte Einzelsymptome": yes},
+        complete:true, higherWorse:true,
+        interp: nCat>=3
+          ? "Die Symptom-Seite der Budapest-Kriterien wäre damit erfüllt (mindestens ein Symptom in mindestens 3 von 4 Gruppen). Das ist ausdrücklich keine Diagnose — dafür muss ein Arzt zusätzlich Befunde in mindestens 2 Gruppen selbst erheben und andere Ursachen ausschließen. Sprich dieses Ergebnis aber gezielt an."
+          : nCat===2 ? "Zwei Symptomgruppen betroffen. Für die Budapest-Symptomkriterien werden drei benötigt. Weiter beobachten und beim Termin erwähnen."
+          : "Aktuell wenig Hinweise auf ein regionales Schmerzsyndrom. Neuropathische Einzelsymptome trotzdem ansprechen, falls vorhanden."};
+    }
+  }
+};
+
+/* ---------- Fragebogen-UI ---------- */
+$("#qSelect").innerHTML = Object.entries(QUESTS).map(([k,q])=>`<option value="${k}">${esc(q.title)}</option>`).join("");
+function showQIntro(){ const q=QUESTS[$("#qSelect").value]; $("#qIntro").textContent = q.intro; }
+$("#qSelect").addEventListener("change", showQIntro); showQIntro();
+
+let qCurrent=null, qAns={};
+$("#qStart").addEventListener("click", ()=>{ openQuest($("#qSelect").value); });
+$("#qCancel").addEventListener("click", ()=>{ $("#qFormCard").hidden=true; qCurrent=null; });
+
+function radioRow(name, scale, current){
+  return `<div class="chips" style="margin-top:.25rem">` + scale.map((o,i)=>
+    `<label class="chip"><input type="radio" name="${name}" value="${o.v}" ${current===o.v?"checked":""}>${esc(o.l)}</label>`
+  ).join("") + `</div>`;
+}
+function openQuest(key){
+  qCurrent = key; qAns = {};
+  const q = QUESTS[key];
+  $("#qTitle").textContent = q.title;
+  let html = "";
+  if(q.groups){
+    q.groups.forEach(g=>{
+      html += `<h3 style="margin-top:1.1rem">${esc(g.name)}</h3><p class="small">${esc(g.lead)}</p>`;
+      g.items.forEach((it,i)=>{
+        html += `<div class="field"><label>${esc(it)}</label>${radioRow(g.key+i, g.scale)}</div>`;
+      });
+    });
+  } else {
+    if(q.lead) html += `<p class="small">${esc(q.lead)}</p>`;
+    q.items.forEach(it=>{
+      const sc = it.opts || q.scale;
+      html += `<div class="field"><label>${esc(it.q)}${it.clin?` <span class="hint">— wird normalerweise ärztlich gemessen</span>`:""}</label>${radioRow(it.key, sc)}</div>`;
+    });
+  }
+  $("#qForm").innerHTML = html;
+  $("#qFormCard").hidden = false;
+  $("#qForm").addEventListener("change", updProgress);
+  updProgress();
+  $("#qFormCard").scrollIntoView({behavior:"smooth", block:"start"});
+}
+function readQ(){
+  const q = QUESTS[qCurrent], a = {};
+  const names = q.groups ? q.groups.flatMap(g=>g.items.map((_,i)=>g.key+i)) : q.items.map(it=>it.key);
+  names.forEach(n=>{ const el=$(`input[name="${n}"]:checked`); if(el) a[n] = +el.value; });
+  return {a, total:names.length};
+}
+function updProgress(){
+  if(!qCurrent) return;
+  const {a,total} = readQ();
+  $("#qProgress").textContent = `${Object.keys(a).length} von ${total} beantwortet`;
+}
+$("#qSave").addEventListener("click", ()=>{
+  if(!qCurrent) return;
+  const q = QUESTS[qCurrent];
+  const {a,total} = readQ();
+  if(Object.keys(a).length < total && !confirm("Es sind noch nicht alle Fragen beantwortet. Trotzdem auswerten? Der Wert ist dann nur eingeschränkt vergleichbar.")) return;
+  const res = q.score(a);
+  DB.quests.push({ id:"q"+Date.now(), type:qCurrent, title:q.title, date:todayISO(), answers:a, result:res });
+  DB.quests.sort((x,y)=> x.date<y.date?-1:1);
+  save();
+  $("#qFormCard").hidden = true; qCurrent=null;
+  renderQuestTable();
+  let msg = `${q.title}: ${res.total}${res.unit} — ${res.interp}`;
+  if(res.flag){
+    alert("Du hast bei Frage 9 angegeben, dass du Gedanken daran hast, lieber tot zu sein oder dir Leid zuzufügen.\n\n"
+      + "Bitte behalte das nicht für dich. Sprich es bei deiner Ärztin oder deinem Arzt an — es ist ein anerkannter Teil der Beurteilung und wird ernst genommen, nicht gegen dich verwendet.\n\n"
+      + "Wenn es dir gerade akut schlecht geht, gibt es rund um die Uhr erreichbare Anlaufstellen. Die Telefonseelsorge in Deutschland ist unter 0800 111 0 111 und 0800 111 0 222 kostenfrei erreichbar, der ärztliche Bereitschaftsdienst unter 116 117, im Notfall die 112.");
+  }
+  toast(msg);
+});
+function renderQuestTable(){
+  const t=$("#qTable");
+  if(!DB.quests.length){ t.innerHTML=`<tbody><tr><td class="small">Noch keine Fragebögen ausgefüllt.</td></tr></tbody>`; return; }
+  const rows = DB.quests.slice().reverse().map(q=>{
+    const sub = Object.entries(q.result.sub||{}).map(([k,v])=>`${esc(k)}: ${v==null?"—":v}${q.type==="ffi"?" %":""}`).join(" · ");
+    return `<tr>
+      <td>${deDate(q.date)}</td>
+      <td>${esc(q.title)}</td>
+      <td class="num"><strong>${q.result.total}</strong><span class="small">${esc(q.result.unit||"")}</span></td>
+      <td>${esc(q.result.interp||"")}${sub?`<br><span class="small">${sub}</span>`:""}</td>
+      <td><button class="btn mini danger" data-qdel="${esc(q.id)}">Löschen</button></td>
+    </tr>`;
+  }).join("");
+  t.innerHTML = `<thead><tr><th>Datum</th><th>Fragebogen</th><th>Ergebnis</th><th>Einordnung</th><th></th></tr></thead><tbody>${rows}</tbody>`;
+  $$("[data-qdel]",t).forEach(b=>b.addEventListener("click",()=>{
+    if(!confirm("Dieses Ergebnis löschen?")) return;
+    DB.quests = DB.quests.filter(x=>x.id!==b.dataset.qdel); save(); renderQuestTable();
+  }));
+}
+
+/* ============================================================
+   ARZT-DOSSIER
+   ============================================================ */
+const D_FIELDS = ["d_name","d_birth","d_side","d_insurer","d_case","d_for","d_question","d_goal",
+                  "d_accDate","d_accType","d_accCourse","d_diag","d_medNow","d_medFail","d_painDoc",
+                  "d_job","d_work","d_gdb","d_reha","d_life"];
+const DOSSIER_PARTS = ["Fragestellung","Unfall und Erstversorgung","Operationen im Zeitverlauf","Diagnosen",
+                       "Bildgebung","Ausgeschöpfte Therapien","Aktuelle Schmerztherapie",
+                       "Messwerte aus dem Schmerztagebuch","Schmerzverlauf als Diagramm",
+                       "Fragebogen-Ergebnisse","Beruf und Teilhabe","Anlagen-Checkliste"];
+renderChips($("#chips_dossier"), DOSSIER_PARTS, "dpart");
+
+function loadDossier(){
+  D_FIELDS.forEach(f=>{ const el=$("#"+f); if(el && DB.dossier[f]!=null) el.value = DB.dossier[f]; });
+  setChips("dpart", DB.dossier.parts || DOSSIER_PARTS);
+  $("#opRows").innerHTML=""; (DB.dossier.ops||[]).forEach(o=>$("#opRows").appendChild(opRow(o)));
+  $("#imgRows").innerHTML=""; (DB.dossier.imaging||[]).forEach(o=>$("#imgRows").appendChild(imgRow(o)));
+  $("#thRows").innerHTML=""; (DB.dossier.therapies||[]).forEach(o=>$("#thRows").appendChild(thRow(o)));
+  updOpCount();
+}
+function saveDossier(){
+  D_FIELDS.forEach(f=>{ const el=$("#"+f); if(el) DB.dossier[f]=el.value; });
+  DB.dossier.parts = chipVals("dpart");
+  DB.dossier.ops = $$("#opRows .repeat-row").map(r=>({
+    date:r.querySelector(".o-date").value, clinic:r.querySelector(".o-clinic").value,
+    proc:r.querySelector(".o-proc").value, result:r.querySelector(".o-res").value }))
+    .filter(o=>o.date||o.proc);
+  DB.dossier.imaging = $$("#imgRows .repeat-row").map(r=>({
+    date:r.querySelector(".i-date").value, mod:r.querySelector(".i-mod").value,
+    finding:r.querySelector(".i-find").value })).filter(o=>o.date||o.finding);
+  DB.dossier.therapies = $$("#thRows .repeat-row").map(r=>({
+    period:r.querySelector(".t-per").value, what:r.querySelector(".t-what").value,
+    result:r.querySelector(".t-res").value })).filter(o=>o.what);
+  save(); updOpCount();
+}
+function updOpCount(){
+  const n = $$("#opRows .repeat-row").length;
+  $("#opCount").textContent = n ? `${n} Eingriff${n===1?"":"e"} erfasst` : "";
+}
+function mkRow(cols, html, onRemove){
+  const w=document.createElement("div"); w.className="repeat-row"; w.style.gridTemplateColumns=cols;
+  w.innerHTML = html + `<div class="rm"><button type="button" class="btn mini danger">×</button></div>`;
+  w.querySelector(".rm button").addEventListener("click", ()=>{ w.remove(); saveDossier(); });
+  w.addEventListener("change", saveDossier);
+  return w;
+}
+function opRow(d){ d=d||{};
+  return mkRow("120px 1.1fr 1.6fr 1.6fr auto", `
+    <div><label>Datum</label><input type="date" class="o-date" value="${esc(d.date||"")}"></div>
+    <div><label>Klinik / Operateur</label><input type="text" class="o-clinic" value="${esc(d.clinic||"")}"></div>
+    <div><label>Eingriff</label><input type="text" class="o-proc" value="${esc(d.proc||"")}" placeholder="z. B. Revisions­arthrodese USG mit Beckenkammspan"></div>
+    <div><label>Ergebnis / Komplikation</label><input type="text" class="o-res" value="${esc(d.result||"")}" placeholder="z. B. ausbleibende Durchbauung"></div>`);
+}
+function imgRow(d){ d=d||{};
+  return mkRow("120px 130px 1fr auto", `
+    <div><label>Datum</label><input type="date" class="i-date" value="${esc(d.date||"")}"></div>
+    <div><label>Verfahren</label><input type="text" class="i-mod" value="${esc(d.mod||"")}" placeholder="CT, MRT, Röntgen, SPECT-CT"></div>
+    <div><label>Kernaussage des Befunds</label><input type="text" class="i-find" value="${esc(d.finding||"")}" placeholder="Wortlaut aus dem Befundbericht, gekürzt"></div>`);
+}
+function thRow(d){ d=d||{};
+  return mkRow("150px 1.2fr 1.2fr auto", `
+    <div><label>Zeitraum</label><input type="text" class="t-per" value="${esc(d.period||"")}" placeholder="z. B. 2024–2025"></div>
+    <div><label>Maßnahme</label><input type="text" class="t-what" value="${esc(d.what||"")}" placeholder="Physiotherapie, Orthese, Stoßwelle, Infiltration …"></div>
+    <div><label>Ergebnis</label><input type="text" class="t-res" value="${esc(d.result||"")}" placeholder="ohne anhaltenden Effekt / abgebrochen weil …"></div>`);
+}
+$("#addOp").addEventListener("click", ()=>{ $("#opRows").appendChild(opRow()); updOpCount(); });
+$("#addImg").addEventListener("click", ()=> $("#imgRows").appendChild(imgRow()));
+$("#addTh").addEventListener("click", ()=> $("#thRows").appendChild(thRow()));
+D_FIELDS.forEach(f=>{ const el=$("#"+f); if(el) el.addEventListener("change", saveDossier); });
+$("#chips_dossier").addEventListener("change", saveDossier);
+
+$("#d_qDefault").addEventListener("click", ()=>{
+  const d = DB.dossier, nOps = (d.ops||[]).length;
+  const seite = d.d_side ? `${d.d_side}en` : "betroffenen";
+  const jahre = d.d_accDate ? Math.max(1, Math.round((Date.now()-new Date(d.d_accDate).getTime())/31557600000)) : null;
+  const txt =
+`Sehr geehrte Damen und Herren,
+
+nach dem Unfall vom ${d.d_accDate?deDate(d.d_accDate):"[Unfalldatum]"} und inzwischen ${nOps||"[Anzahl]"} Operation${nOps===1?"":"en"} am ${seite} Rückfuß — darunter mehrfache Spongiosaplastik vom Beckenkamm und zwei fehlgeschlagene Arthrodesen des unteren Sprunggelenks — besteht erneut eine Pseudarthrose bei gelockertem Osteosynthesematerial.
+
+Ich bitte um eine schriftliche Stellungnahme zu drei Fragen:
+
+1. Welche extremitätenerhaltenden Verfahren sind bei der aktuellen Knochensituation überhaupt noch durchführbar — mit welcher realistisch zu erwartenden Durchbauungsrate, wie vielen weiteren Eingriffen und welcher Zeit bis zur Belastbarkeit?
+
+2. Falls diese Verfahren keine belastbare Aussicht auf ein schmerzarmes und belastbares Ergebnis bieten: Erfülle ich die Kriterien für eine elektive transtibiale Amputation nach gescheitertem Extremitätenerhalt?
+
+3. Falls ja: Welche Vorbereitung halten Sie für erforderlich — insbesondere zum Ausschluss einer niedriggradigen Infektion, zur intraoperativen Nervenversorgung zur Vermeidung von Neurom- und Phantomschmerz sowie zur Prothesenplanung?
+
+Ich stelle diese Fragen nicht aus einem Impuls heraus, sondern nach ${jahre?jahre+" Jahren":"[Zeitraum]"}, in denen ich jeden angebotenen Erhaltungsversuch mitgetragen habe. Es geht mir nicht darum, den Fuß loszuwerden, sondern darum, eine belastbare Entscheidungsgrundlage zu bekommen — auch dann, wenn Ihre Antwort lautet, dass der Erhalt weiterhin die bessere Option ist. Ich bitte darum, Ihre Einschätzung in den Arztbrief aufzunehmen.
+
+Die beigefügten Zahlen stammen aus einer täglichen Selbstdokumentation. Sie sind nicht zugespitzt; wo Werte schwanken, ist die Schwankung mit abgebildet.`;
+  $("#d_question").value = txt; saveDossier(); toast("Text eingesetzt — bitte anpassen, damit er nach dir klingt.");
+});
+$("#d_diagHelp").addEventListener("click", ()=>{
+  const add =
+`Pseudarthrose nach Arthrodese des unteren Sprunggelenks (M84.1)
+Mechanische Komplikation durch Osteosynthesematerial, Materiallockerung (T84.1)
+Posttraumatische Arthrose des unteren Sprunggelenks (M19.07)
+Zustand nach drittgradig offener Kalkaneustrümmerfraktur, Sanders IV, mit Luxationskomponente (T92.1)
+Zustand nach mehrfacher Spongiosaentnahme vom Beckenkamm
+Chronische Schmerzstörung mit somatischen und psychischen Faktoren (F45.41)
+Gangstörung mit Hilfsmittelbedarf (R26.8)`;
+  const cur = $("#d_diag").value.trim();
+  $("#d_diag").value = cur ? cur+"\n"+add : add;
+  saveDossier();
+  toast("Vorschläge eingefügt — bitte mit deinen Arztbriefen abgleichen und Falsches streichen.");
+});
+
+/* ============================================================
+   ARZTGESPRÄCH — Fragenkatalog
+   ============================================================ */
+const CONSULT = [
+ {sec:"1. Was am aktuellen Befund noch offen ist", qs:[
+  {k:"c11", q:"Ist eine niedriggradige Infektion sicher ausgeschlossen?",
+   why:"Nach drittgradig offener Fraktur und mehrfachen Revisionen ist ein Low-grade-Infekt eine der häufigsten Ursachen für ausbleibende Durchbauung. Er wird durch normale Blutwerte nicht ausgeschlossen. Frag konkret nach Gewebeproben aus mehreren Entnahmestellen, verlängerter Bebrütung und Sonikation des entfernten Materials."},
+  {k:"c12", q:"Wie ist die Durchblutung und die Knochenqualität im Rückfuß tatsächlich?",
+   why:"Entscheidet darüber, ob ein weiterer Erhaltungsversuch überhaupt eine biologische Grundlage hat. Frag, ob ein SPECT-CT, eine MRT oder eine Angiographie hier weiterhelfen würde."},
+  {k:"c13", q:"Wie viel tragfähige Knochensubstanz ist noch vorhanden, und wie groß ist der Defekt in Zentimetern?",
+   why:"Die Defektgröße bestimmt die Optionen. Ab etwa 2 cm Defekt kommen strukturelle Ersatzverfahren ins Spiel, darunter patientenspezifische 3D-gedruckte Titanimplantate."},
+  {k:"c14", q:"Welcher Anteil meiner Schmerzen ist aus Ihrer Sicht mechanisch, welcher neuropathisch?",
+   why:"Das ist die wichtigste Frage vor jeder Amputationsentscheidung. Ein mechanischer Anteil verschwindet mit dem Gelenk. Ein neuropathischer Anteil kann als Stumpf- oder Phantomschmerz bestehen bleiben."}]},
+
+ {sec:"2. Welche erhaltenden Optionen bleiben — und wie realistisch sind sie", qs:[
+  {k:"c21", q:"Welche Verfahren kommen konkret noch infrage — und mit welcher Durchbauungsrate?",
+   why:"Bitte um Zahlen, nicht um Zuversicht. Orientierung aus der Literatur: primäre subtalare Arthrodesen erreichen Durchbauungsraten bis über 90 Prozent, Revisionseingriffe deutlich weniger — in einer vielzitierten Serie von Easley et al. lag die Rate bei Revisionen bei rund 71 Prozent. Nach zwei gescheiterten Versuchen mit Voroperationen, offener Fraktur und devitalisiertem Knochen liegt die realistische Erwartung darunter. Frag, welche Zahl Ihr Haus für genau meine Ausgangslage annimmt."},
+  {k:"c22", q:"Kommen strukturelles Allograft, freies vaskularisiertes Transplantat, ein 3D-gedrucktes Implantat oder eine tibiotalokalkaneare Arthrodese mit Marknagel infrage?",
+   why:"Strukturelle Allografts haben in kleinen Serien eine hohe Pseudarthroserate gezeigt. Bei ausgedehnten Defekten werden zunehmend patientenspezifische Titanimplantate eingesetzt. Ein vaskularisiertes Transplantat bringt eigene Durchblutung mit — die Frage ist, ob die Weichteile das hergeben."},
+  {k:"c23", q:"Woher soll der Knochen kommen, wenn beide Beckenkämme bereits mehrfach entnommen wurden?",
+   why:"Nach mehrfacher Entnahme ist die Spenderregion oft erschöpft und selbst schmerzhaft. Alternativen sind Entnahme aus der Tibia (in einer Übersicht mit rund 6,8 Prozent Entnahmemorbidität und damit geringer als am Beckenkamm), das RIA-Verfahren aus dem Oberschenkelmarkraum oder Knochenmarkaspirat-Konzentrat."},
+  {k:"c24", q:"Wie viele weitere Operationen und wie viele Monate ohne Belastung wären insgesamt zu erwarten?",
+   why:"Diese Zahl braucht es, um die Optionen ehrlich gegeneinander zu stellen. Zwei weitere Eingriffe mit je drei Monaten Entlastung sind eine andere Entscheidung als einer."},
+  {k:"c25", q:"Angenommen, ein Erhalt gelingt — welche Funktion wäre danach realistisch zu erwarten?",
+   why:"Ein durchbauter, aber weiterhin schmerzhafter und nicht belastbarer Rückfuß ist radiologisch ein Erfolg und im Alltag keiner. Frag nach erwarteter Gehstrecke, Schmerzniveau und Hilfsmittelbedarf, nicht nach Durchbauung allein."}]},
+
+ {sec:"3. Die Amputationsfrage", qs:[
+  {k:"c31", q:"Welche Kriterien müssen aus Ihrer Sicht erfüllt sein, damit eine elektive Amputation nach gescheitertem Extremitätenerhalt indiziert ist — und welche erfülle ich?",
+   why:"Zwingt zu einer überprüfbaren Antwort statt zu einem Bauchgefühl. Bitte darum, die Antwort in den Arztbrief aufzunehmen."},
+  {k:"c32", q:"Wie ordnen Sie die Datenlage zum Vergleich Erhalt gegen Amputation ein?",
+   why:"Die große prospektive LEAP-Studie fand nach zwei Jahren keinen signifikanten Funktionsunterschied zwischen Rekonstruktion und Amputation (SIP 12,6 gegenüber 11,8; p = 0,53). Rekonstruierte Patienten mussten jedoch häufiger wegen Komplikationen erneut stationär behandelt werden, 47,5 gegenüber 33,9 Prozent. Nach sieben Jahren war rund die Hälfte beider Gruppen weiterhin erheblich beeinträchtigt. Die Studie belegt keine Überlegenheit der Amputation — aber sie widerlegt die Annahme, ein erhaltenes Bein sei automatisch das bessere Ergebnis."},
+  {k:"c33", q:"Welche Amputationshöhe wäre in meinem Fall funktionell am günstigsten?",
+   why:"Die transtibiale Amputation gilt prothetisch als deutlich günstiger als Absetzungen im Fuß- oder Sprunggelenkbereich, weil die Weichteildeckung und die Prothesenanbindung besser sind. Frag, ob die Weichteilverhältnisse nach den Voreingriffen eine ausreichend lange Stumpfversorgung zulassen."},
+  {k:"c34", q:"Was spricht in meinem Fall gegen eine Amputation?",
+   why:"Stell diese Frage ausdrücklich. Erstens, weil du eine echte Entscheidung willst und keine Bestätigung. Zweitens, weil sie zeigt, dass du die Tragweite verstanden hast — und genau das erhöht die Bereitschaft, dich ernst zu nehmen."},
+  {k:"c35", q:"Wer entscheidet das, und in welchem Gremium?",
+   why:"An größeren Häusern läuft das über eine interdisziplinäre Fallkonferenz mit Unfallchirurgie, Plastischer Chirurgie, Schmerzmedizin, Psychosomatik und Technischer Orthopädie. Frag, ob dein Fall dort vorgestellt werden kann und wann."}]},
+
+ {sec:"4. Schmerz nach der Operation verhindern", qs:[
+  {k:"c41", q:"Wird bei der Amputation eine gezielte Nervenversorgung durchgeführt — TMR oder RPNI?",
+   why:"Die wichtigste operationstechnische Frage überhaupt. Targeted Muscle Reinnervation und Regenerative Peripheral Nerve Interfaces werden am Ende der Amputation durchgeführt, um Neurome zu verhindern. Studien zeigen weniger Phantom- und Stumpfschmerz und weniger symptomatische Neurome. Nicht jedes Haus bietet das an — das kann ein Grund sein, die Klinik zu wählen."},
+  {k:"c42", q:"Wie wird perioperativ betäubt, und gibt es ein Konzept zur Phantomschmerz-Prophylaxe?",
+   why:"Regionalanästhesieverfahren über mehrere Tage, eine Anpassung der Medikation vor der Operation und frühe Spiegeltherapie gehören zu den etablierten Bausteinen."},
+  {k:"c43", q:"Was passiert mit meinem chronischen Schmerzgedächtnis nach so langer Zeit?",
+   why:"Nach über zwei Jahren Dauerschmerz ist eine zentrale Sensibilisierung wahrscheinlich. Frag, ob eine schmerzmedizinische Mitbehandlung vor der Operation beginnen sollte — das verbessert die Ergebnisse und wird bei der Indikationsstellung positiv gewertet."}]},
+
+ {sec:"5. Danach: Prothese, Reha, Kostenträger", qs:[
+  {k:"c51", q:"Wann beginnt die Prothesenversorgung, und wer übernimmt sie?",
+   why:"Frag nach Interimsprothese, Zeitplan bis zur Erstversorgung und danach zur Definitivversorgung, und nach der Anbindung an ein Sanitätshaus mit Erfahrung in dieser Versorgungsstufe."},
+  {k:"c52", q:"Welche Funktion ist mit Prothese realistisch — Gehstrecke, Beruf, Autofahren, Sport?",
+   why:"Bitte um konkrete Angaben und, wenn möglich, um Kontakt zu Betroffenen mit vergleichbarer Ausgangslage. Ein Gespräch mit jemandem, der es hinter sich hat, ist durch nichts zu ersetzen."},
+  {k:"c53", q:"Wie läuft die Kostenübernahme, und wer stellt die Anträge?",
+   why:"Bei einem Arbeitsunfall ist die Berufsgenossenschaft zuständig, sonst die Krankenkasse. Kläre außerdem Reha-Antrag, Anpassung von Grad der Behinderung oder Minderung der Erwerbsfähigkeit und mögliche Umbauten zu Hause."},
+  {k:"c54", q:"Welche Reha ist geplant und in welcher Einrichtung?",
+   why:"Die Qualität der Prothesenrehabilitation entscheidet über das Ergebnis mindestens so stark wie die Operation selbst. Frag gezielt nach Einrichtungen mit Schwerpunkt Amputationsrehabilitation."}]},
+
+ {sec:"6. Formales und Absicherung", qs:[
+  {k:"c61", q:"Können Sie Ihre Einschätzung schriftlich in den Arztbrief aufnehmen?",
+   why:"Mündliche Aussagen sind für Zweitmeinungen und gegenüber Kostenträgern wertlos. Diese Bitte ist völlig üblich."},
+  {k:"c62", q:"Welche spezialisierte Klinik würden Sie mir für eine Zweitmeinung empfehlen?",
+   why:"Eine Zweitmeinung ist kein Misstrauensvotum, sondern bei einer irreversiblen Entscheidung selbstverständlich. Ein guter Behandler nennt dir von sich aus zwei Adressen."},
+  {k:"c63", q:"Welche Unterlagen brauche ich für die Vorstellung woanders, und bekomme ich meine Bilddaten?",
+   why:"Lass dir alle Bildgebungen auf CD oder digital aushändigen sowie sämtliche OP-Berichte. Du hast ein Recht auf vollständige Kopien deiner Akte."},
+  {k:"c64", q:"Wie lange kann ich mit der Entscheidung warten, ohne dass sich meine Ausgangslage verschlechtert?",
+   why:"Klärt, ob Zeitdruck besteht — und nimmt dir, falls nicht, das Gefühl, sofort entscheiden zu müssen."}]}
+];
+
+function renderConsult(){
+  const c = $("#consultBody");
+  c.innerHTML = CONSULT.map(s=>`
+    <details class="acc" open><summary>${esc(s.sec)}</summary><div>
+      ${s.qs.map(q=>`
+        <div class="qa-block">
+          <div class="q">${esc(q.q)}</div>
+          <div class="why">${esc(q.why)}</div>
+          <label for="${q.k}" class="small" style="font-weight:600">Antwort / Notiz</label>
+          <textarea id="${q.k}" data-consult="${q.k}" placeholder="Hier während oder direkt nach dem Termin eintragen.">${esc(DB.consult[q.k]||"")}</textarea>
+        </div>`).join("")}
+    </div></details>`).join("");
+  $$("[data-consult]",c).forEach(t=>t.addEventListener("change", ()=>{
+    DB.consult[t.dataset.consult]=t.value; save();
+  }));
+}
+
+/* ============================================================
+   DRUCK / PDF
+   ============================================================ */
+function pHead(title, sub){
+  const d = DB.dossier;
+  const who = [d.d_name, d.d_birth?("geb. "+deDate(d.d_birth)):null].filter(Boolean).join(", ");
+  const ins = [d.d_insurer, d.d_case].filter(Boolean).join(" · ");
+  return `<div class="p-head">
+    <h1>${esc(title)}</h1>
+    <div class="p-meta">${esc(sub||"")}${sub?" &middot; ":""}Erstellt am ${deDate(todayISO())}</div>
+    ${who?`<div class="p-meta"><strong>${esc(who)}</strong>${ins?" &middot; "+esc(ins):""}</div>`:""}
+    ${d.d_for?`<div class="p-meta">Für: ${esc(d.d_for)}</div>`:""}
+  </div>`;
+}
+function pFoot(){
+  return `<footer>Selbstdokumentation der Patientin bzw. des Patienten. Die Angaben beruhen auf täglicher
+  Eigenerfassung und ersetzen keine ärztliche Befunderhebung. Seitenzahl und Zeitraum siehe oben.</footer>`;
+}
+function kv(pairs){
+  const rows = pairs.filter(p=>p[1]).map(p=>`<div class="k">${esc(p[0])}</div><div>${nl2br(p[1])}</div>`).join("");
+  return rows ? `<div class="kv">${rows}</div>` : "";
+}
+function metricsTable(days){
+  const a = agg(inRange(days));
+  if(!a.n) return "<p>Noch keine Tagebuchdaten erfasst.</p>";
+  const f = v => v==null?"—":round1(v);
+  return `<table><thead><tr><th>Parameter</th><th>Mittelwert</th><th>Spanne</th><th>Umrechnung 0–100</th></tr></thead><tbody>
+  <tr><td>Ruheschmerz (NRS 0–10)</td><td>${f(a.rest)}</td><td>${a.restMin??"—"} – ${a.restMax??"—"}</td><td>${n100(a.rest)}</td></tr>
+  <tr><td>Belastungsschmerz (NRS 0–10)</td><td>${f(a.load)}</td><td>${a.loadMin??"—"} – ${a.loadMax??"—"}</td><td>${n100(a.load)}</td></tr>
+  <tr><td>Tagesmaximum (NRS 0–10)</td><td>${f(a.max)}</td><td>—</td><td>${n100(a.max)}</td></tr>
+  <tr><td>Nächte mit Schmerzerwachen</td><td>${a.nightPct} %</td><td>${a.nights} von ${a.n}</td><td>${a.avgWake?("Ø endgültig wach "+a.avgWake+" Uhr"):"—"}</td></tr>
+  <tr><td>Schmerzfreie Gehstrecke</td><td>${a.walk==null?"—":Math.round(a.walk)+" m"}</td><td>${a.walkMin??"—"} – ${a.walkMax??"—"} m</td><td>—</td></tr>
+  <tr><td>Stehdauer am Stück</td><td>${a.stand==null?"—":Math.round(a.stand)+" min"}</td><td>—</td><td>—</td></tr>
+  <tr><td>Tage mit Analgetikaeinnahme</td><td>${a.medPct} %</td><td>${a.medDays} von ${a.n}</td><td>—</td></tr>
+  <tr><td>Tage mit Hilfsmittelbedarf</td><td>${a.aidPct} %</td><td>${a.aidDays} von ${a.n}</td><td>—</td></tr>
+  <tr><td>Alltagsbeeinträchtigung (0–10)</td><td>${f(a.impair)}</td><td>—</td><td>${n100(a.impair)}</td></tr>
+  <tr><td>Seelische Belastung (0–10)</td><td>${f(a.burden)}</td><td>—</td><td>${n100(a.burden)}</td></tr>
+  </tbody></table>
+  <p class="muted">Grundlage: ${a.n} dokumentierte Tage${days>=9999?"":" der letzten "+days+" Tage"}. NRS = numerische Ratingskala, 0 = kein Schmerz, 10 = stärkster vorstellbarer Schmerz.</p>`;
+}
+function diaryTable(list){
+  if(!list.length) return "<p>Keine Einträge.</p>";
+  return `<table><thead><tr><th>Datum</th><th>Ruhe</th><th>Belast.</th><th>Max</th><th>Nacht</th><th>Geh m</th>
+    <th>Steh min</th><th>Hilfsm.</th><th>Alltag</th><th>Medikation</th><th>Notiz</th></tr></thead><tbody>` +
+    list.map(e=>`<tr><td>${deDate(e.date)}</td><td>${e.rest??""}</td><td>${e.load??""}</td><td>${e.max??""}</td>
+    <td>${(e.nightWakes||0)}${e.wakeTime?" / "+esc(e.wakeTime):""}</td><td>${e.walk??""}</td><td>${e.stand??""}</td>
+    <td>${esc(e.aid||"")}</td><td>${e.impair??""}</td>
+    <td>${esc((e.meds||[]).map(m=>m.name+(m.times?" ×"+m.times:"")).join(", "))}</td>
+    <td>${esc(e.note||"")}</td></tr>`).join("") + `</tbody></table>`;
+}
+function questTable(){
+  if(!DB.quests.length) return "<p>Keine Fragebögen ausgefüllt.</p>";
+  return `<table><thead><tr><th>Datum</th><th>Instrument</th><th>Ergebnis</th><th>Einordnung</th></tr></thead><tbody>`+
+   DB.quests.slice().reverse().map(q=>{
+     const sub = Object.entries(q.result.sub||{}).map(([k,v])=>`${esc(k)}: ${v==null?"—":v}${q.type==="ffi"?" %":""}`).join("; ");
+     return `<tr><td>${deDate(q.date)}</td><td>${esc(q.title)}</td>
+       <td><strong>${q.result.total}</strong>${esc(q.result.unit||"")}</td>
+       <td>${esc(q.result.interp||"")}${sub?"<br>"+sub:""}</td></tr>`;
+   }).join("")+`</tbody></table>`;
+}
+function opTable(){
+  const ops = (DB.dossier.ops||[]).slice().sort((a,b)=> (a.date||"")<(b.date||"")?-1:1);
+  if(!ops.length) return "<p>Keine Operationen erfasst.</p>";
+  return `<table><thead><tr><th style="width:15%">Datum</th><th style="width:22%">Klinik / Operateur</th>
+    <th style="width:33%">Eingriff</th><th style="width:30%">Ergebnis / Komplikation</th></tr></thead><tbody>`+
+    ops.map(o=>`<tr><td>${deDate(o.date)}</td><td>${esc(o.clinic||"")}</td><td>${esc(o.proc||"")}</td><td>${esc(o.result||"")}</td></tr>`).join("")+
+    `</tbody></table><p class="muted">Insgesamt ${ops.length} dokumentierte Eingriffe.</p>`;
+}
+function simpleTable(rows, heads){
+  if(!rows.length) return "<p>Keine Angaben erfasst.</p>";
+  return `<table><thead><tr>${heads.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>`+
+   rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c||"")}</td>`).join("")}</tr>`).join("")+`</tbody></table>`;
+}
+function chartForPrint(){
+  const d = chartData();
+  if(!d.length) return "";
+  return lineChart(d, [
+    {key:"rest", color:"#1f5f8b"},{key:"load", color:"#333"},{key:"max", color:"#888", w:1.2, dash:"4 3"}
+  ], {yMax:10, ticks:5, yLabel:"NRS 0–10", h:230, aria:"Schmerzverlauf"}) +
+  `<p class="muted">Durchgezogen dunkelblau: Ruheschmerz. Durchgezogen schwarz: Belastungsschmerz. Gestrichelt: Tagesmaximum.</p>`;
+}
+function doPrint(html){
+  $("#printArea").innerHTML = html;
+  window.print();
+}
+
+$("#printDossier").addEventListener("click", ()=>{
+  saveDossier();
+  const d = DB.dossier, parts = d.parts || DOSSIER_PARTS;
+  const has = p => parts.includes(p);
+  const days = 9999;
+  let h = pHead("Verlaufsdokumentation und Fragestellung",
+    d.d_side ? `Rückfuß ${d.d_side}` : "");
+  if(has("Fragestellung") && d.d_question){
+    h += `<h2>Fragestellung</h2><div class="box">${nl2br(d.d_question)}</div>`;
+    if(d.d_goal) h += `<h3>Behandlungsziel aus Patientensicht</h3><p>${nl2br(d.d_goal)}</p>`;
+  }
+  if(has("Unfall und Erstversorgung")){
+    h += `<h2>Unfall und Erstversorgung</h2>`+kv([["Unfalldatum", d.d_accDate?deDate(d.d_accDate):""],["Unfallart", d.d_accType],["Betroffene Seite", d.d_side]]);
+    if(d.d_accCourse) h += `<p>${nl2br(d.d_accCourse)}</p>`;
+  }
+  if(has("Diagnosen") && d.d_diag) h += `<h2>Aktuelle Diagnosen</h2><p>${nl2br(d.d_diag)}</p>`;
+  if(has("Operationen im Zeitverlauf")) h += `<h2>Operationen im Zeitverlauf</h2>`+opTable();
+  if(has("Bildgebung")) h += `<h2>Bildgebung und Befunde</h2>`+
+    simpleTable((DB.dossier.imaging||[]).map(i=>[deDate(i.date), i.mod, i.finding]), ["Datum","Verfahren","Kernaussage"]);
+  if(has("Ausgeschöpfte Therapien")) h += `<h2>Ausgeschöpfte Therapieversuche</h2>`+
+    simpleTable((DB.dossier.therapies||[]).map(t=>[t.period, t.what, t.result]), ["Zeitraum","Maßnahme","Ergebnis"]);
+  if(has("Aktuelle Schmerztherapie")){
+    h += `<h2>Aktuelle Schmerztherapie</h2>`+kv([["Dauermedikation", d.d_medNow],["Erfolglos oder abgebrochen", d.d_medFail],["Schmerzmedizinische Mitbehandlung", d.d_painDoc]]);
+  }
+  if(has("Messwerte aus dem Schmerztagebuch")){
+    h += `<h2 class="avoid-break">Messwerte aus der täglichen Selbstdokumentation</h2>`+metricsTable(days);
+  }
+  if(has("Schmerzverlauf als Diagramm")){
+    const c = chartForPrint(); if(c) h += `<h2 class="avoid-break">Schmerzverlauf</h2><div class="avoid-break">${c}</div>`;
+  }
+  if(has("Fragebogen-Ergebnisse")) h += `<h2>Ergebnisse standardisierter Fragebögen</h2>`+questTable();
+  if(has("Beruf und Teilhabe")){
+    h += `<h2>Beruf, Alltag und Teilhabe</h2>`+kv([["Beruf", d.d_job],["Arbeitsfähigkeit", d.d_work],["GdB / MdE", d.d_gdb],["Reha-Maßnahmen", d.d_reha]]);
+    if(d.d_life) h += `<h3>Konkrete Einschränkungen im Alltag</h3><p>${nl2br(d.d_life)}</p>`;
+  }
+  if(has("Anlagen-Checkliste")){
+    h += `<h2>Anlagen</h2><table><tbody>`+
+      ["Aktuelle CT- oder Röntgenbilder auf Datenträger","Radiologische Befundberichte","Operationsberichte aller Eingriffe",
+       "Aktuelle Arztbriefe","Vollständiger Medikationsplan","Bisherige Gutachten oder Bescheide",
+       "Dieses Dokument mit Schmerzverlauf","Fragenkatalog für das Gespräch"]
+      .map(x=>`<tr><td style="width:22pt;text-align:center">☐</td><td>${esc(x)}</td></tr>`).join("")+`</tbody></table>`;
+  }
+  h += pFoot();
+  doPrint(h);
+});
+
+$("#printConsult").addEventListener("click", ()=>{
+  let h = pHead("Fragen an die behandelnden Ärztinnen und Ärzte","Gesprächsbogen");
+  h += `<p class="muted">Bitte um Beantwortung im Gespräch. Ich bitte darum, die Einschätzung anschließend
+        in den Arztbrief aufzunehmen.</p>`;
+  CONSULT.forEach(s=>{
+    h += `<h2>${esc(s.sec)}</h2>`;
+    s.qs.forEach(q=>{
+      const note = DB.consult[q.k];
+      h += `<div class="avoid-break" style="margin-bottom:9pt">
+        <h3 style="margin-bottom:2pt">${esc(q.q)}</h3>
+        <div class="muted" style="font-size:8.6pt;margin-bottom:3pt">${esc(q.why)}</div>
+        ${note ? `<div style="border-left:2pt solid #666;padding-left:6pt">${nl2br(note)}</div>`
+               : `<div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>`}
+      </div>`;
+    });
+  });
+  h += pFoot(); doPrint(h);
+});
+
+$("#printDiary").addEventListener("click", ()=>{
+  let h = pHead("Schmerztagebuch — Einzelwerte","Vollständige Erfassung");
+  h += metricsTable(9999);
+  const c = chartForPrint(); if(c) h += `<h2 class="avoid-break">Verlauf</h2><div class="avoid-break">${c}</div>`;
+  h += `<h2>Tabellarische Einzelwerte</h2>` + diaryTable(DB.entries.slice().reverse());
+  h += pFoot(); doPrint(h);
+});
+$("#printChart").addEventListener("click", ()=>{
+  let h = pHead("Schmerzverlauf","Diagramm");
+  h += chartForPrint() + metricsTable(+$("#statRange").value) + pFoot();
+  doPrint(h);
+});
+$("#printQuest").addEventListener("click", ()=>{
+  doPrint(pHead("Standardisierte Fragebögen","Ergebnisse im Verlauf") + questTable() + pFoot());
+});
+$("#btnPrintAll").addEventListener("click", ()=>{
+  saveDossier();
+  const d = DB.dossier;
+  let h = pHead("Gesamtdokumentation", d.d_side?`Rückfuß ${d.d_side}`:"");
+  if(d.d_question) h += `<h2>Fragestellung</h2><div class="box">${nl2br(d.d_question)}</div>`;
+  if(d.d_goal) h += `<p><strong>Behandlungsziel:</strong> ${nl2br(d.d_goal)}</p>`;
+  h += `<h2>Unfall und Erstversorgung</h2>`+kv([["Unfalldatum", d.d_accDate?deDate(d.d_accDate):""],["Unfallart", d.d_accType]]);
+  if(d.d_accCourse) h += `<p>${nl2br(d.d_accCourse)}</p>`;
+  if(d.d_diag) h += `<h2>Diagnosen</h2><p>${nl2br(d.d_diag)}</p>`;
+  h += `<h2>Operationen im Zeitverlauf</h2>`+opTable();
+  h += `<h2>Bildgebung</h2>`+simpleTable((d.imaging||[]).map(i=>[deDate(i.date), i.mod, i.finding]),["Datum","Verfahren","Kernaussage"]);
+  h += `<h2>Ausgeschöpfte Therapieversuche</h2>`+simpleTable((d.therapies||[]).map(t=>[t.period,t.what,t.result]),["Zeitraum","Maßnahme","Ergebnis"]);
+  h += `<h2 class="avoid-break">Messwerte aus der Selbstdokumentation</h2>`+metricsTable(9999);
+  const c = chartForPrint(); if(c) h += `<div class="avoid-break"><h2>Schmerzverlauf</h2>${c}</div>`;
+  h += `<h2>Standardisierte Fragebögen</h2>`+questTable();
+  h += `<h2>Beruf, Alltag und Teilhabe</h2>`+kv([["Beruf",d.d_job],["Arbeitsfähigkeit",d.d_work],["GdB / MdE",d.d_gdb],["Reha",d.d_reha]]);
+  if(d.d_life) h += `<p>${nl2br(d.d_life)}</p>`;
+  h += `<div class="pagebreak"></div><h2>Fragen an die Behandler</h2>`;
+  CONSULT.forEach(s=>{
+    h += `<h3>${esc(s.sec)}</h3><table><tbody>`+
+      s.qs.map(q=>`<tr><td style="width:45%">${esc(q.q)}</td><td>${DB.consult[q.k]?nl2br(DB.consult[q.k]):"&nbsp;"}</td></tr>`).join("")+
+      `</tbody></table>`;
+  });
+  h += `<div class="pagebreak"></div><h2>Anhang: Einzelwerte des Schmerztagebuchs</h2>`+diaryTable(DB.entries.slice().reverse());
+  h += pFoot();
+  doPrint(h);
+});
+
+/* ============================================================
+   EXPORT / BACKUP
+   ============================================================ */
+function download(name, content, mime){
+  const blob = new Blob([content], {type:mime||"text/plain;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href=url; a.download=name; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 500);
+}
+function csv(){
+  const head = ["Datum","Kontext","Ruheschmerz_0_10","Belastungsschmerz_0_10","Tagesmaximum_0_10",
+    "Ruheschmerz_0_100","Belastungsschmerz_0_100","Naechtliche_Wachphasen","Wach_seit","Schlafstunden","Schlafqualitaet_0_10",
+    "Gehstrecke_m","Stehdauer_min","Hilfsmittel","Treppe","Alltagsbeeintraechtigung_0_10","Nicht_moeglich",
+    "Schwellung_0_3","Hauttemperatur","Hautfarbe","Beobachtungen","Schmerzcharakter","Lokalisation",
+    "Medikation","Medikamentenwirkung_0_10","Nebenwirkungen","Seelische_Belastung_0_10","Notiz"];
+  const q = v => `"${String(v==null?"":v).replace(/"/g,'""')}"`;
+  const lines = [head.join(";")];
+  DB.entries.forEach(e=>{
+    lines.push([e.date,e.context,e.rest,e.load,e.max, e.rest==null?"":e.rest*10, e.load==null?"":e.load*10,
+      e.nightWakes,e.wakeTime,e.sleep,e.sleepQual,e.walk,e.stand,e.aid,e.stairs,e.impair,(e.unable||[]).join(", "),
+      e.swell,e.temp,e.color,(e.signs||[]).join(", "),(e.character||[]).join(", "),(e.location||[]).join(", "),
+      (e.meds||[]).map(m=>`${m.name} ${m.dose} ×${m.times}`).join(" | "),e.medEffect,(e.sideFx||[]).join(", "),
+      e.burden,e.note].map(q).join(";"));
+  });
+  return "﻿"+lines.join("\r\n");
+}
+function doCsv(){
+  if(!DB.entries.length){ toast("Noch keine Einträge zum Exportieren."); return; }
+  download(`schmerztagebuch_${todayISO()}.csv`, csv(), "text/csv;charset=utf-8");
+  toast("CSV heruntergeladen.");
+}
+$("#exportCsv").addEventListener("click", doCsv);
+$("#btnCsv2").addEventListener("click", doCsv);
+$("#btnBackup").addEventListener("click", ()=>{
+  saveDossier();
+  download(`schmerzdoku_sicherung_${todayISO()}.json`, JSON.stringify(DB,null,2), "application/json");
+  toast("Sicherung heruntergeladen. Bewahre sie außerhalb dieses Geräts auf.");
+});
+$("#btnRestore").addEventListener("click", ()=> $("#fileRestore").click());
+$("#fileRestore").addEventListener("change", ev=>{
+  const f = ev.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try{
+      const o = JSON.parse(r.result);
+      if(!o || typeof o!=="object" || !Array.isArray(o.entries)) throw new Error("Kein gültiges Sicherungsformat");
+      if(!confirm(`Sicherung mit ${o.entries.length} Tagebucheinträgen einlesen? Die aktuellen Daten in diesem Browser werden ersetzt.`)) return;
+      DB = o; DB.quests=DB.quests||[]; DB.dossier=DB.dossier||{ops:[],imaging:[],therapies:[]}; DB.consult=DB.consult||{};
+      save(); loadDossier(); renderConsult(); renderStats(); renderCharts(); renderPatterns(); renderHistory(); renderQuestTable();
+      toast("Sicherung eingelesen.");
+    }catch(e){ alert("Datei konnte nicht gelesen werden: "+e.message); }
+    ev.target.value="";
+  };
+  r.readAsText(f);
+});
+$("#btnWipe").addEventListener("click", ()=>{
+  if(!confirm("Wirklich alle Daten in diesem Browser löschen? Das lässt sich nicht rückgängig machen.")) return;
+  if(!confirm("Sicher? Bitte vorher eine JSON-Sicherung anlegen.")) return;
+  DB = blank(); if(HAS_LS) localStorage.removeItem(KEY); memStore=null;
+  loadDossier(); renderConsult(); resetEntry(); renderStats(); renderCharts(); renderPatterns(); renderHistory(); renderQuestTable();
+  toast("Alle Daten gelöscht.");
+});
+function storageInfo(){
+  const bytes = new Blob([JSON.stringify(DB)]).size;
+  const last = DB.entries.length ? deDate(DB.entries[DB.entries.length-1].date) : "—";
+  $("#storageInfo").textContent =
+    `${DB.entries.length} Tagebucheinträge · ${DB.quests.length} Fragebogen-Ergebnisse · letzter Eintrag ${last} · `+
+    `Datenmenge ${(bytes/1024).toFixed(1)} kB · Speicherort: ${HAS_LS?"Browser-Speicher dieses Geräts":"nur Arbeitsspeicher — bitte sofort sichern, die Daten gehen beim Schließen verloren"}`;
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function init(){
+  $("#e_date").value = todayISO();
+  const t = DB.entries.find(e=>e.date===todayISO());
+  if(t) fillEntry(t);
+  loadDossier(); renderConsult();
+  if(DB.dossier.d_side) $("#headSub").textContent = `Rückfuß ${DB.dossier.d_side} · tägliche Selbsterfassung`;
+  renderStats(); renderCharts(); renderPatterns(); renderHistory(); renderQuestTable();
+  refreshEntryStatus(); storageInfo();
+  if(!HAS_LS){
+    const n = document.createElement("div"); n.className="notice warn";
+    n.innerHTML = "<strong>Achtung:</strong> Dieser Browser erlaubt keine lokale Speicherung (privater Modus oder blockierte Cookies). Deine Eingaben gehen beim Schließen des Tabs verloren. Bitte einen normalen Browser-Tab verwenden oder regelmäßig als JSON sichern.";
+    document.querySelector("main").prepend(n);
+  }
+  document.addEventListener("visibilitychange", ()=>{ if(document.hidden) saveDossier(); });
+  window.addEventListener("beforeunload", saveDossier);
+  setInterval(storageInfo, 5000);
+}
+init();
+</script>
+</body>
+</html>
