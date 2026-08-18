@@ -202,6 +202,7 @@ svg.chart{display:block; min-width:520px; width:100%; height:auto}
       <button role="tab" data-tab="quest" aria-selected="false">Fragebögen</button>
       <button role="tab" data-tab="dossier" aria-selected="false">Arzt-Dossier</button>
       <button role="tab" data-tab="consult" aria-selected="false">Arztgespräch</button>
+      <button role="tab" data-tab="evidenz" aria-selected="false">Evidenz &amp; Studien</button>
       <button role="tab" data-tab="data" aria-selected="false">Daten &amp; Export</button>
     </nav>
   </div>
@@ -653,6 +654,494 @@ svg.chart{display:block; min-width:520px; width:100%; height:auto}
       eintragen und den Bogen erneut ausdrucken kannst.</p>
     <div id="consultBody"></div>
   </div>
+</section>
+
+<!-- ============ EVIDENZ ============ -->
+<section class="tabpanel" id="tab-evidenz" hidden>
+
+  <div class="notice info">
+    <p><strong>Wofür diese Seite da ist.</strong> Sie fasst zusammen, was in der veröffentlichten Literatur
+      zu genau dieser Konstellation steht: schwere Rückfußverletzung, gescheiterter Erhalt, chronischer
+      Schmerz, Frage nach elektiver Amputation. Nichts hier ist ausgewählt worden, weil es in eine Richtung
+      zeigt — die Zahlen, die gegen eine Amputation sprechen, stehen mit drin und sind eigens
+      gekennzeichnet. Genau das ist der Punkt: Eine Entscheidung wirkt überlegt, wenn man auch die
+      Gegenargumente kennt.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Der Einwand „das ist nicht gut überlegt"</h2>
+      <button class="btn mini" id="printEvidenz">Ganze Evidenzseite drucken</button></div>
+    <p>Wer nach zwei Jahren Dauerschmerz von sich aus eine Amputation ins Gespräch bringt, bekommt oft
+      zu hören, das sei aus der Verzweiflung heraus gesprochen. Dazu drei Dinge, die sich belegen lassen:</p>
+    <p><strong>Erstens:</strong> Verzweiflung ist bei dieser Krankheitslast keine Auffälligkeit, sondern
+      die Regel. In der LEAP-Kohorte hatten <strong>42 %</strong> der Patientinnen und Patienten nach
+      schwerem Extremitätentrauma mittelgradige bis schwere Depression, Angst oder psychische
+      Funktionsstörung. Die AAOS-Leitlinie macht daraus eine <em>Strong Recommendation</em>: alle
+      Betroffenen sollen darauf gescreent werden. Psychische Belastung ist also ein erwarteter Befund,
+      der behandelt gehört — kein Grund, den Behandlungswunsch zu entwerten.</p>
+    <p><strong>Zweitens:</strong> Schmerz ist in der Literatur die häufigste Indikation für eine späte
+      Amputation, nicht die Ausnahme. In der Rückfuß-Kohorte von Bennett war bei
+      <strong>68 %</strong> der verzögerten Amputationen der Schmerz der Grund, bei 14 % die
+      Lebensqualität, bei je 7 % Pseudarthrose und Infekt. Der Wunsch ist damit exakt der Regelfall.</p>
+    <p><strong>Drittens:</strong> Was Chirurgen tatsächlich unterscheiden wollen, ist nicht
+      „verzweifelt oder nicht", sondern <strong>impulsiv oder gewachsen</strong>. Und das ist zeigbar:
+      durch eine über Monate geführte Dokumentation, durch ausgeschöpfte Alternativen, durch die
+      Bereitschaft, die Nachteile beim Namen zu nennen, und durch die Frage nach dem, was gegen die
+      Amputation spricht. Das Werkzeug in dieser App ist genau dafür gebaut.</p>
+    <div class="notice ok" style="margin-top:.8rem">
+      <p><strong>Ein Satz, der im Gespräch mehr bewirkt als jedes Argument:</strong><br>
+      „Ich möchte keine Amputation. Ich möchte, dass der Schmerz aufhört. Wenn Sie mir einen anderen Weg
+      dahin zeigen können, mit einer belastbaren Erfolgswahrscheinlichkeit und einer Zeitangabe, gehe ich
+      ihn. Wenn nicht, möchte ich, dass die Amputation ernsthaft geprüft und die Prüfung dokumentiert wird."</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>1. Erhalt oder Amputation bei Rückfußverletzungen — die Studienlage</h2>
+    <p class="small">Das ist der wichtigste Block. Die verbreitete Annahme, ein erhaltenes Bein sei
+      grundsätzlich das bessere Ergebnis, wird von den großen prospektiven Studien nicht gestützt —
+      bei Rückfußverletzungen zeigt sich sogar das Gegenteil.</p>
+    <div class="tbl-scroll">
+    <table class="data">
+      <thead><tr><th>Studie</th><th>Umfang</th><th>Kernbefund</th></tr></thead>
+      <tbody>
+        <tr><td><strong>OUTLET</strong><br><span class="small">METRC, JBJS Am 2021</span></td>
+            <td class="num">n = 639<br><span class="small">prospektiv, zivil</span></td>
+            <td>Bei den erhaltenen Extremitäten hätte eine Amputation eine um <strong>7 Punkte bessere
+            SMFA-Mobilität</strong> ergeben (95 %-KI 2,0–10,7). Fazit der Autoren wörtlich: Amputation
+            sollte bei den komplexesten Verletzungen „als Behandlungsoption und nicht als letztes Mittel"
+            gelten.</td></tr>
+        <tr><td><strong>LEAP-Rückfuß</strong><br><span class="small">Ellington et al., J Orthop Trauma 2013</span></td>
+            <td class="num">n = 174<br><span class="small">prospektiv, zivil</span></td>
+            <td>Erhalt mit freiem Lappen und/oder Arthrodese hatte nach 24 Monaten einen um
+            <strong>2,5 Punkte schlechteren Gesamt-SIP</strong> (p = 0,014) und einen um
+            <strong>8,4 Punkte schlechteren psychosozialen SIP</strong> (p = 0,013) als die
+            Unterschenkelamputation.</td></tr>
+        <tr><td><strong>Bennett et al.</strong><br><span class="small">Bone &amp; Joint Res 2018</span></td>
+            <td class="num">n = 90 Extremitäten<br><span class="small">Rückfuß, 64 Mon. Median</span></td>
+            <td>SF-12 körperlicher Summenscore <strong>45 (Erhalt) vs. 51 (verzögerte Amputation)</strong>,
+            p = 0,035. In der ungünstigen Untergruppe — negativer Böhler-Winkel, kombinierte
+            Rückfußverletzung — <strong>29 vs. 51 (p &lt; 0,0001)</strong>. Verzögerte Amputation im Median
+            nach 14 Monaten; Indikation in <strong>68 % Schmerz</strong>.</td></tr>
+        <tr><td><strong>Dickens et al.</strong><br><span class="small">JBJS Am 2013</span></td>
+            <td class="num">n = 102 offene<br>Kalkaneusfrakturen</td>
+            <td>Amputierte hatten <strong>niedrigere Schmerzscores (2,1 vs. 4,0)</strong> und höhere
+            Aktivität (5,4 vs. 3,5) als Patienten mit erhaltener Extremität. Amputationsrate insgesamt
+            42 %, davon 15 % später als 12 Wochen nach dem Trauma.</td></tr>
+        <tr><td><strong>LEAP</strong><br><span class="small">Bosse/MacKenzie, NEJM 2002</span></td>
+            <td class="num">n = 601<br><span class="small">prospektiv</span></td>
+            <td>Nach 2 Jahren <strong>kein Funktionsunterschied</strong> (SIP 12,6 vs. 11,8; p = 0,53).
+            Aber: Rehospitalisierung wegen Komplikationen <strong>47,5 % nach Rekonstruktion vs. 33,9 %
+            nach Amputation</strong>; Osteomyelitis 9 % vs. 3 %; Pseudarthrose nach Rekonstruktion 23,7 %.</td></tr>
+        <tr><td><strong>METALS</strong><br><span class="small">Doukas et al., JBJS Am 2013</span></td>
+            <td class="num">n = 324</td>
+            <td>Amputierte in <strong>nahezu allen SMFA-Domänen besser</strong> (p &lt; 0,01) und
+            signifikant seltener PTBS. Kein Unterschied bei Schmerzinterferenz und Beschäftigung.</td></tr>
+        <tr><td><strong>Krijgh et al.</strong><br><span class="small">Eur J Trauma Emerg Surg 2024</span></td>
+            <td class="num">n = 176<br><span class="small">11 ± 7 Jahre Verlauf</span></td>
+            <td>Langfristig <strong>kein Unterschied in der Lebensqualität</strong>. Bemerkenswert: die
+            psychische Gesundheit erklärte <strong>33 % der Varianz</strong> der körperlichen Funktion und
+            <strong>57 %</strong> der Funktionsskala — deutlich mehr als die Frage Erhalt oder Amputation.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="notice warn" style="margin-top:.8rem">
+      <p><strong>Gegenposition, fairerweise:</strong> Kurozumi et al. (PLOS ONE 2022, n = 47) fanden nach
+        <em>einem</em> Jahr bessere Werte für den Erhalt (LEFS 49,5 vs. 33,1). Die Amputationen dort waren
+        aber überwiegend akut und die Verletzungen definitionsgemäß schwerer — auf eine elektive Amputation
+        nach zwei Jahren gescheitertem Erhalt lässt sich das kaum übertragen. Außerdem stammt ein Teil der
+        stärksten Evidenz zugunsten der Amputation (METALS, Bennett, Dickens) aus <strong>militärischen
+        Kohorten</strong>: junge, fitte Patienten mit erstklassiger Prothesenversorgung. OUTLET und die
+        LEAP-Rückfußauswertung sind allerdings zivil und zeigen dasselbe Muster.</p>
+    </div>
+    <p class="small">Aus der AAOS-Leitlinie <em>Limb Salvage or Early Amputation</em> (2019/2020):
+      <strong>30–40 %</strong> der Patienten mit „erfolgreichem" Extremitätenerhalt haben trotzdem
+      schlechte Funktion und Lebensqualität; <strong>10–15 %</strong> entscheiden sich später doch für eine
+      sekundäre Amputation. Wörtliche Empfehlung: Verletzungsmuster, die eine Sprunggelenksarthrodese oder
+      einen freien Gewebetransfer am Fuß erfordern, <em>können in der nicht-akuten Phase eine Indikation
+      zur Amputation darstellen und sollten in gemeinsamer Entscheidungsfindung mit der Patientin oder dem
+      Patienten besprochen werden.</em></p>
+  </div>
+
+  <div class="card">
+    <h2>2. Amputation, wenn allein der Schmerz die Indikation ist</h2>
+    <p class="small">Die belastbarste Literatur dazu stammt aus der CRPS-Forschung — dort wird
+      amputiert, weil der Schmerz nicht beherrschbar ist, nicht weil Gewebe fehlt. Das ist die
+      Konstellation, die deiner am nächsten kommt.</p>
+    <div class="grid g3">
+      <div class="stat"><div class="k">Schmerzreduktion</div><div class="v">73<span class="u">%</span></div><div class="d">wichtige Besserung; im Mittel −3,5 NRS-Punkte (Geertzen 2020, n = 48)</div></div>
+      <div class="stat"><div class="k">Mobilität besser</div><div class="v">77<span class="u">%</span></div><div class="d">Geertzen 2020, n = 48</div></div>
+      <div class="stat"><div class="k">„Würde ich wieder machen"</div><div class="v">98<span class="u">%</span></div><div class="d">47 von 48 Befragten (Geertzen 2020)</div></div>
+      <div class="stat"><div class="k">Lebensqualität besser</div><div class="v">66<span class="u">%</span></div><div class="d">systematischer Review, 96 Patienten (Ayyaswamy 2019)</div></div>
+      <div class="stat"><div class="k">Zufriedenheit</div><div class="v">81<span class="u">%</span></div><div class="d">und ebenso viele würden erneut so entscheiden (Linden 2021)</div></div>
+      <div class="stat"><div class="k">Opioide abgesetzt</div><div class="v">10<span class="u"> von 18</span></div><div class="d">7 weitere reduzierten; Gehstrecke 0,5 → 1,3 km (Honkamp, transtibial bei intraktablem Schmerz)</div></div>
+    </div>
+    <p style="margin-top:.9rem">Besonders aussagekräftig ist die Vergleichsstudie von <strong>Midbari et al.
+      (Bone Joint J 2016)</strong>: 19 amputierte gegen 19 nicht amputierte Patientinnen und Patienten mit
+      gleich schwerem, therapieresistentem Schmerz. Schmerz-VAS <strong>80 vs. 91</strong> (p = 0,007),
+      Amputierte besser in <strong>6 von 8 SF-36-Domänen</strong>, 68 % würden es weiterempfehlen —
+      aber nur 10 % kehrten in den Beruf zurück und 89 % hatten Phantomschmerz. Beides gehört zusammen
+      genannt.</p>
+    <p class="small">Wichtige Einschränkung: Diese Zahlen stammen aus <strong>CRPS-Kohorten</strong>. Wenn
+      der Schmerz überwiegend mechanisch ist — Pseudarthrose, gelockertes Material, Reiben von
+      Knochenflächen — ist die Ausgangslage für eine Amputation eher günstiger als in diesen Studien,
+      weil die Schmerzquelle mitentfernt wird. Ist er überwiegend neuropathisch oder zentral generiert,
+      eher ungünstiger. Genau deshalb steht die Frage nach dem mechanischen und dem neuropathischen
+      Anteil im Fragenkatalog an erster Stelle.</p>
+  </div>
+
+  <div class="card">
+    <h2>3. Was die Amputation kostet — die ehrliche Gegenrechnung</h2>
+    <p class="small">Diese Zahlen ins eigene Dossier aufzunehmen ist kein Eigentor. Es ist das stärkste
+      verfügbare Signal dafür, dass die Entscheidung informiert getroffen wird.</p>
+    <div class="tbl-scroll">
+    <table class="data">
+      <thead><tr><th>Risiko</th><th>Häufigkeit</th><th>Quelle und Einordnung</th></tr></thead>
+      <tbody>
+        <tr><td>Phantomschmerz</td><td class="num"><strong>64 %</strong></td>
+            <td>Metaanalyse, 37 Studien, 12.738 Patienten (Limakatso, PLOS ONE 2020). In CRPS-Kohorten
+            55–89 %. <strong>Persistierender präoperativer Schmerz ist ein anerkannter Risikofaktor</strong>
+            — deshalb ist die Frage nach TMR bzw. RPNI beim Eingriff so wichtig.</td></tr>
+        <tr><td>Stumpfschmerz</td><td class="num">30–53 %</td><td>Ayyaswamy 2019; Geertzen 2020</td></tr>
+        <tr><td>Stürze im letzten Jahr</td><td class="num">57,6 %</td>
+            <td>n = 66 Prothesennutzer; 22,7 % Mehrfachstürzer (Kim, PM&amp;R 2018)</td></tr>
+        <tr><td>Rückkehr in den Beruf</td><td class="num">47–66 %</td>
+            <td>LEAP 7 Jahre: 47 %; Fisher 2003: 66 %, davon 57 % im selben Beruf. Zum Vergleich: nach
+            erhaltener Kalkaneusfraktur konnten 27 von 114 Patienten ihren früheren Beruf nicht mehr
+            ausüben (Schindler 2021).</td></tr>
+        <tr><td>Prothesennutzung</td><td class="num">37–100 %</td>
+            <td>Enorme Spannweite: nur 37 % in CRPS-Kohorten mit fortbestehendem Schmerz (Ayyaswamy),
+            aber 100 % bei jungen Traumapatienten mit guter Versorgung (Akarsu 2013, 6-Minuten-Gehtest
+            524 m). Das ist der Unterschied, den Rehabilitationsqualität und Nervenchirurgie machen.</td></tr>
+        <tr><td>Irreversibilität</td><td class="num">—</td>
+            <td>Der Eingriff lässt sich nicht rückgängig machen. Das ist kein statistisches, sondern ein
+            grundsätzliches Argument und sollte auch so benannt werden.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <h2>4. Wie realistisch ist noch ein Erhaltungsversuch?</h2>
+    <div class="tbl-scroll">
+    <table class="data">
+      <thead><tr><th>Situation</th><th>Durchbauungsrate</th><th>Quelle</th></tr></thead>
+      <tbody>
+        <tr><td>Erste subtalare Arthrodese</td><td class="num"><strong>95,4 %</strong></td>
+            <td>Systematischer Review, 26 Studien, 839 Füße. VAS sinkt im Mittel von 6,0 auf 1,6;
+            AOFAS steigt von 49,6 auf 79,4</td></tr>
+        <tr><td>Erste Revisionsarthrodese</td><td class="num"><strong>80 %</strong></td>
+            <td>Chraim et al., Foot Ankle Int 2021, n = 20. 20 % erneute Pseudarthrose;
+            10 % der Patienten unzufrieden</td></tr>
+        <tr><td>Revision, andere Serie</td><td class="num">71 %</td>
+            <td>Easley et al., 28 Revisionen von 184 Eingriffen</td></tr>
+        <tr><td><strong>Dritte Arthrodese nach zwei Fehlschlägen, drei Beckenkammtransplantationen
+            und fehlender Knochenmasse</strong></td>
+            <td class="num"><strong>keine Daten</strong></td>
+            <td>Für diese Konstellation existiert in der Literatur <strong>keine publizierte
+            Erfolgsrate</strong> — die Fallzahlen gibt es schlicht nicht. Das ist selbst ein Argument:
+            Wer eine dritte Arthrodese vorschlägt, sollte offenlegen, dass er dabei keine Datengrundlage
+            zitieren kann.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="small" style="margin-top:.6rem">Zur Einordnung des Ausgangsbefundes: Nach Sanders-IV-Frakturen
+      liegt der AOFAS in der größten Langzeitserie (Schindler 2021, 114 Fälle, 91 Monate) bei
+      <strong>70 Punkten</strong>; 76 % der Patienten brauchten mindestens eine Folgeoperation,
+      18 % eine sekundäre subtalare Arthrodese. Bei <strong>offenen</strong> Kalkaneusfrakturen vom Typ
+      Gustilo IIIB berichtet die Referenzserie von Heier (JBJS Am 2003) eine Infektionsrate von
+      <strong>77 %</strong>, Osteomyelitis bei 46 % und eine <strong>Amputationsrate von 46 %</strong>.
+      Der Verlauf ist damit nicht ungewöhnlich, sondern für diese Verletzung typisch.</p>
+  </div>
+
+  <div class="card">
+    <h2>5. Was möglicherweise noch nicht ausgeschöpft ist</h2>
+    <p class="small">Diese vier Punkte im Gespräch von sich aus anzusprechen ist der schnellste Weg,
+      den Verdacht der Kurzschlusshandlung zu entkräften — man fragt schließlich nach Alternativen zur
+      eigenen Forderung.</p>
+
+    <details class="acc" open><summary>a) Verstecktem Infekt nachgehen</summary><div>
+      <p>Eine Metaanalyse über <strong>2.397 Patienten</strong> mit vermeintlich aseptischer Pseudarthrose
+        fand bei <strong>16 %</strong> unerwartet positive Kulturen, bei <strong>10 %</strong> eine echte
+        okkulte Infektion (Wagner, Arch Orthop Trauma Surg 2024). In der prospektiven Multizenterstudie von
+        Hackl (J Orthop Traumatol 2023, n = 127) hatte die <strong>Histologie nur 14 % Sensitivität</strong>,
+        die Gewebekultur mit <strong>14-tägiger Bebrütung 69 %</strong>, die Sonikation 52 %.</p>
+      <p><strong>Konkrete Frage:</strong> Wurden bei den bisherigen Eingriffen drei bis fünf getrennte
+        Gewebeproben entnommen und 14 Tage bebrütet? Wurde das entfernte Material soniziert? Falls nein,
+        ist ein Low-grade-Infekt nicht ausgeschlossen — und das ändert sowohl die Erfolgsaussicht eines
+        weiteren Erhaltungsversuchs als auch die Planung einer Amputation.</p>
+    </div></details>
+
+    <details class="acc"><summary>b) Interdisziplinäre multimodale Schmerztherapie (OPS 8-918)</summary><div>
+      <p>Stationäre Komplexbehandlung über <strong>7 bis über 20 Behandlungstage</strong>, in der ärztliche,
+        psychotherapeutische, physio- und ergotherapeutische Behandlung gleichzeitig und abgestimmt
+        stattfinden. Nach über zwei Jahren Dauerschmerz ist ein zentral mitgenerierter Anteil
+        wahrscheinlich — und der verschwindet mit dem Fuß nicht automatisch.</p>
+      <p>Zwei Gründe, das trotzdem zu wollen: Es kann den Schmerz tatsächlich senken. Und falls nicht, ist
+        es die belastbarste Dokumentation gegenüber Operateur und Kostenträger, dass die konservativen
+        Optionen ausgeschöpft sind. Beides hilft.</p>
+      <p class="small">Anlaufstellen in München: Zentrum für Interdisziplinäre Schmerzmedizin am Klinikum
+        rechts der Isar, Schmerzambulanz und Tagesklinik am LMU Klinikum (Großhadern und Innenstadt),
+        Algesiologikum. Bundesweite Suche über die Deutsche Schmerzgesellschaft.</p>
+    </div></details>
+
+    <details class="acc"><summary>c) Orthoprothese als Probelauf ohne irreversiblen Schritt</summary><div>
+      <p>Eine Orthoprothese ist eine Hybridversorgung, die einen erhaltenen, aber funktionslosen Fuß
+        vollständig entlastet und in eine prothesenähnliche Struktur einbettet. Damit lässt sich ein
+        prothesennahes Gangbild und die vollständige Entlastung des Rückfußes im Alltag erleben —
+        <strong>ohne Amputation</strong>.</p>
+      <p>Das ist der realistischste verfügbare Probelauf und zugleich ein starkes Argument im Gespräch:
+        Wer bereit ist, das vorher auszuprobieren, handelt erkennbar nicht überstürzt. Bringt die
+        Orthoprothese Schmerzfreiheit, ist die Amputation womöglich vermeidbar. Bringt sie keine, ist das
+        ein dokumentierter Befund zugunsten der Amputation.</p>
+      <p class="small">Anbieter unter anderem Pohlig (Traunstein). Spezialsprechstunde für Fuß- und
+        Rückfußprothetik am Universitätsklinikum Heidelberg.</p>
+    </div></details>
+
+    <details class="acc"><summary>d) Peer-Beratung vor der Entscheidung</summary><div>
+      <p>Der Bundesverband für Menschen mit Arm- oder Beinamputation (BMAB) vermittelt über das Programm
+        „Amputierte helfen Amputierten" geschulte Betroffene — <strong>ausdrücklich auch vor</strong> einer
+        geplanten Amputation. Bitte gezielt um Vermittlung an jemanden mit
+        <strong>Unterschenkelamputation nach Trauma</strong>, nicht nach Diabetes oder Gefäßerkrankung:
+        Verlauf, Alter und Prothesenversorgung sind dort völlig anders.</p>
+      <p>Ein dokumentiertes Peer-Gespräch ist außerdem eines der Elemente, die in den publizierten
+        Entscheidungsalgorithmen ausdrücklich vorgesehen sind.</p>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h2>6. Der publizierte Entscheidungsweg — und wo du darin stehst</h2>
+    <p class="small">Für die elektive Amputation bei therapierefraktärem Schmerz existiert ein
+      veröffentlichter Algorithmus (Journal of Personalized Medicine 2022). Ihn zu kennen und die eigenen
+      Punkte durchzugehen, verändert die Gesprächsdynamik grundlegend: Du bittest dann nicht um eine
+      Amputation, sondern um die Abarbeitung eines Verfahrens.</p>
+    <div class="tbl-scroll">
+    <table class="data">
+      <thead><tr><th>Voraussetzung im Algorithmus</th><th>Was das konkret heißt</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Über zwei Jahre ohne Ansprechen</strong> auf andere Therapiemodalitäten</td>
+            <td>Unfall 05/2024 — dieses Kriterium ist zeitlich erfüllt. Die Dauer ist hier ausdrücklich
+            ein Argument <em>für</em> die Ernsthaftigkeit, nicht dagegen.</td></tr>
+        <tr><td>Medikamentöse und interdisziplinäre Schmerzinterventionen ausgeschöpft</td>
+            <td>Falls noch keine multimodale Schmerztherapie stattgefunden hat, ist das die Lücke —
+            siehe Punkt 5b.</td></tr>
+        <tr><td>Physio- und Ergotherapie sowie Neuromodulation dokumentiert erfolglos</td>
+            <td>Gehört in den Dossier-Abschnitt „Ausgeschöpfte Therapieversuche".</td></tr>
+        <tr><td><strong>Psychiatrische bzw. psychologische Evaluation</strong></td>
+            <td>Geprüft werden Einwilligungsfähigkeit, Verständnis der Irreversibilität, Depression, Angst,
+            PTBS, Bewältigungsstrategien und soziale Unterstützung. Ausschlusskriterien sind akute Psychose,
+            Demenz und schwerer Substanzmissbrauch. <strong>Das ist keine Prüfung, ob man „verrückt" ist</strong>
+            — es ist ein Formalschritt, der die Entscheidung absichert. Aktiv darum zu bitten, ist eines der
+            stärksten Signale von Ernsthaftigkeit.</td></tr>
+        <tr><td>Probeweise Prothesenanpassung vor der Entscheidung</td>
+            <td>Im Algorithmus ausdrücklich <em>für alle Fälle</em> empfohlen — siehe Orthoprothese
+            unter 5c.</td></tr>
+        <tr><td><strong>Interdisziplinäre Fallkonferenz</strong></td>
+            <td>Unfallchirurgie, Plastische Chirurgie, Gefäßchirurgie, Rehabilitationsmedizin,
+            Schmerzmedizin, Physiotherapie, Orthopädietechnik, Psychiatrie, Sozialdienst. Die Konferenz
+            schützt auch die Behandler rechtlich — deshalb ist die Bitte darum meist willkommen.</td></tr>
+        <tr><td>Nervenversorgung beim Eingriff (TMR bzw. RPNI)</td>
+            <td>Reduziert nachweislich Phantom- und Stumpfschmerz sowie symptomatische Neurome.
+            Nicht jedes Haus bietet es an — das kann die Klinikwahl bestimmen.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="small">Ergebnisse aus derselben Arbeit, für den Erwartungsabgleich: 66 % profitierten mit
+      besserer Lebensqualität, 40 % erreichten Schmerzfreiheit, 60 % gewannen an Funktion, 85 % waren mit
+      dem Ergebnis zufrieden — aber nur 37 % nutzten dauerhaft eine Prothese.</p>
+  </div>
+
+  <div class="card">
+    <h2>7. Deutschland konkret: Leitlinien, Wege, Adressen</h2>
+
+    <details class="acc"><summary>Leitlinien</summary><div>
+      <ul>
+        <li><strong>AWMF 033-044</strong> — „Rehabilitation nach Majoramputation an der unteren Extremität",
+          S2k, Stand 09/2019, <strong>seit 23.06.2024 abgelaufen</strong>. Die Aktualisierung läuft unter
+          <strong>187-056</strong>, Publikation war für 2026 angekündigt. Aktuellen Stand im
+          AWMF-Register prüfen.</li>
+        <li><strong>AWMF 030-116</strong> — CRPS, S1, Stand 09/2018, ebenfalls als abgelaufen geführt.
+          Relevant als Differenzialdiagnose: <em>bei CRPS bessert eine Amputation den Schmerz häufig
+          nicht</em>. Deshalb sollte CRPS vorher ausdrücklich bestätigt oder ausgeschlossen werden.</li>
+        <li><strong>AWMF 145-003 (LONTS)</strong> — S3 zur Langzeitanwendung von Opioiden bei chronischen
+          nicht-tumorbedingten Schmerzen, 2. Aktualisierung 2020.</li>
+        <li><strong>AWMF 187-047</strong> — „Frakturassoziierte Infektionen nach Osteosynthese", S2k,
+          in Arbeit. Eine eigenständige Leitlinie zur Pseudarthrose oder zur Kalkaneusfraktur existiert
+          nicht.</li>
+      </ul>
+    </div></details>
+
+    <details class="acc"><summary>Zweitmeinung — was gilt und was nicht</summary><div>
+      <p><strong>Das gesetzliche Zweitmeinungsverfahren nach § 27b SGB V gilt für diesen Fall nicht.</strong>
+        Auf der Liste der derzeit 13 Eingriffe steht nur die Amputation beim <em>diabetischen</em>
+        Fußsyndrom. Wichtig zu wissen, damit man nicht mit einem Anspruch argumentiert, den es hier nicht gibt.</p>
+      <p>Was stattdessen funktioniert:</p>
+      <ul>
+        <li><strong>Freie Arztwahl nach § 76 SGB V</strong> — jederzeit einen weiteren Facharzt aufsuchen,
+          keine Überweisung zwingend, Kassenleistung.</li>
+        <li><strong>Satzungsleistungen der Krankenkasse</strong> — viele Kassen zahlen Zweitmeinungen auch
+          außerhalb der 13 Eingriffe. Schriftlich mit Bitte um Kostenzusage anfragen.</li>
+        <li><strong>Zweitmeinungssprechstunden</strong> an Universitäts- und BG-Kliniken.</li>
+        <li><strong>Bei Arbeitsunfall:</strong> über die Berufsgenossenschaft eine Vorstellung in einem
+          SAV-Haus oder ein Zusatzgutachten beantragen. Bei einer irreversiblen Entscheidung ist das ein
+          üblicher, gut begründbarer Antrag.</li>
+      </ul>
+    </div></details>
+
+    <details class="acc"><summary>Spezialisierte Kliniken</summary><div>
+      <p><strong>Pseudarthrose und septische Knochenchirurgie, Bayern</strong></p>
+      <ul>
+        <li>BG Unfallklinik Murnau — Septische und Rekonstruktive Chirurgie (SAV-Haus der Region)</li>
+        <li>LMU Klinikum, MUM — Schwerpunkt „Problemfrakturen, Pseudarthrosen und Spezielle Unfallchirurgie"
+          sowie Schwerpunkt Septische Chirurgie</li>
+        <li>Klinikum rechts der Isar (TUM) — Fuß- und Sprunggelenkchirurgie</li>
+        <li>Schön Klinik München Harlaching — Zentrum für Fuß- und Sprunggelenkchirurgie</li>
+      </ul>
+      <p><strong>Überregional</strong></p>
+      <ul>
+        <li>BG Klinikum Duisburg — Zentrum für Pseudarthrosen</li>
+        <li>Universitätsklinikum Regensburg — Zentrum für muskuloskelettale Infektionen</li>
+        <li>BG Kliniken Tübingen und Ludwigshafen — Septische Chirurgie</li>
+      </ul>
+      <p><strong>Amputation mit TMR bzw. RPNI</strong></p>
+      <ul>
+        <li><strong>BG Klinikum Duisburg, Sektion Periphere Nervenchirurgie</strong> — bietet TMR
+          ausdrücklich bei Stumpf- und Phantomschmerz nach Majoramputation der unteren Extremität an;
+          der am klarsten belegte deutsche Anbieter für Beinamputierte.</li>
+        <li>Medizinische Hochschule Hannover / NIFE — AG „Innovative Amputationsmedizin"</li>
+        <li>ETHIANUM Klinik Heidelberg — moderne Neurombehandlung</li>
+      </ul>
+      <p class="small">Eine offizielle Liste deutscher TMR-Zentren existiert nicht. Entscheidend ist die
+        Frage, ob TMR <strong>primär beim Amputationseingriff selbst</strong> durchgeführt wird — das ist
+        deutlich wirksamer als eine spätere Revision.</p>
+    </div></details>
+
+    <details class="acc"><summary>Kostenträger, GdB und MdE</summary><div>
+      <p><strong>Grad der Behinderung</strong> nach Versorgungsmedizin-Verordnung, Teil B Nr. 18:</p>
+      <ul>
+        <li>Unterschenkelamputation bei genügender Funktionstüchtigkeit des Stumpfes: <strong>GdB 50</strong></li>
+        <li>Unterschenkelamputation bei ungenügender Funktionstüchtigkeit: <strong>GdB 60</strong></li>
+        <li>Versteifung des unteren Sprunggelenks in günstiger Stellung: <strong>GdB 10</strong>;
+          oberes Sprunggelenk 20; beide zusammen 30</li>
+      </ul>
+      <p>Das ist der sozialrechtlich unbefriedigende Punkt: Für einen <em>erhaltenen, aber funktionslosen
+        und schmerzhaften</em> Fuß gibt es keinen eigenen Tabellenwert. Er wird aus Einzelbewertungen
+        zusammengesetzt und liegt deshalb in der Praxis <strong>häufig unter 50</strong> — also unter dem
+        Wert, den die Amputation automatisch auslöst, obwohl die Alltagseinschränkung größer sein kann.
+        Ein Verschlimmerungsantrag mit ausführlicher Schmerzdokumentation ist hier der Hebel;
+        die Auswertung dieser App liefert genau das.</p>
+      <p><strong>MdE bei Arbeitsunfall:</strong> Nach den DGUV-Eckwerten liegt die Unterschenkelamputation
+        bei <strong>MdE 40 v. H.</strong>, Sprunggelenksversteifungen nach dem Konsenspapier der
+        MdE-Kommission bei 10 bis 20 v. H. <strong>Achtung:</strong> Das kann bedeuten, dass die Amputation
+        rentenrechtlich <em>höher</em> bewertet wird als der jetzige Zustand — oder auch nicht, wenn die
+        Schmerzstörung mitbewertet wird. Vor dem Eingriff sozialrechtlich beraten lassen; die aktuellen
+        Werte über die BG verifizieren.</p>
+      <p><strong>Verletzungsartenverfahren:</strong> Komplexe Kalkaneusfrakturen (Sanders III/IV) und
+        ausgedehnte Infektionen fallen in das Schwerstverletzungsartenverfahren — es besteht also
+        grundsätzlich Anspruch auf Behandlung in einem SAV-Haus. Bei komplexen Verläufen stellt die BG
+        außerdem einen Reha-Manager als festen Ansprechpartner. DGUV-Infoline 0800 6050404.</p>
+    </div></details>
+
+    <details class="acc"><summary>Patientenrechte und Beschwerdewege</summary><div>
+      <ul>
+        <li><strong>§ 630g BGB</strong> — Anspruch auf unverzügliche Einsicht in die vollständige
+          Behandlungsdokumentation und auf elektronische Abschriften. Umfasst OP-Berichte, Arztbriefe,
+          Pflegedokumentation und <strong>Bilddaten im Originalformat</strong>. Die erste Kopie ist
+          unentgeltlich, Frist spätestens ein Monat. Schriftlich anfordern und die Bilddaten auf CD im
+          DICOM-Format ausdrücklich benennen.</li>
+        <li><strong>Unabhängige Patientenberatung Deutschland</strong> — seit 2023 Stiftung,
+          kostenfreie Hotline <strong>0800 011 77 22</strong>.</li>
+        <li><strong>Patientenfürsprecher</strong> in bayerischen Krankenhäusern; Beschwerdestelle der
+          Bayerischen Landesärztekammer auch bei Kommunikationskonflikten.</li>
+        <li><strong>Gutachterstelle für Arzthaftungsfragen der BLÄK</strong> — kostenfreies
+          außergerichtliches Verfahren bei Verdacht auf Behandlungsfehler. Auch die eigene Krankenkasse
+          kann nach § 66 SGB V ein Gutachten beim Medizinischen Dienst veranlassen.</li>
+      </ul>
+    </div></details>
+
+    <details class="acc"><summary>Peer-Support und Selbsthilfe</summary><div>
+      <ul>
+        <li><strong>Bundesverband für Menschen mit Arm- oder Beinamputation (BMAB)</strong> — Programme
+          „Amputierte helfen Amputierten" und „Peers im Krankenhaus", Peer-Karte zur Suche in der Region,
+          regionale Gruppen, Beratung zu Prothesenversorgung, Schmerz und Schwerbehindertenrecht.
+          bmab.de</li>
+        <li><strong>Amputierten-Initiative e. V.</strong> — unabhängige Betroffeneninitiative mit
+          Schwerpunkt Aufklärung und prothetische Versorgung. amputierten-initiative.de</li>
+        <li>Falls CRPS im Raum steht: CRPS Netzwerk e. V. und crpsselbsthilfe.org</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h2>8. Die sieben Zahlen, die im Gespräch am meisten tragen</h2>
+    <ol style="margin:0 0 0 1.1rem; padding:0">
+      <li style="margin-bottom:.5rem">Bei Rückfußverletzungen ist der Erhalt in prospektiven Studien
+        funktionell <strong>unterlegen</strong>, nicht überlegen: SMFA-Mobilität 7 Punkte schlechter
+        (OUTLET, n = 639), SIP 2,5 Punkte schlechter (Ellington, n = 174), SF-12 45 vs. 51 (Bennett).</li>
+      <li style="margin-bottom:.5rem">In der ungünstigen Untergruppe liegt der SF-12 bei
+        <strong>29 gegenüber 51</strong> bei den Amputierten (p &lt; 0,0001).</li>
+      <li style="margin-bottom:.5rem"><strong>Schmerz ist mit 68 % die häufigste Indikation</strong> für
+        die späte Amputation — der Wunsch ist der Regelfall, nicht die Ausnahme.</li>
+      <li style="margin-bottom:.5rem">Bei Amputation wegen therapieresistenten Schmerzes bessern sich
+        69–77 %, und <strong>81–98 % würden sich wieder so entscheiden</strong>.</li>
+      <li style="margin-bottom:.5rem">Der ehrliche Preis: Phantomschmerz 64 %, Stumpfschmerz 30–53 %,
+        Sturzrate 57,6 % pro Jahr, Rückkehr in den Beruf 47–66 %.</li>
+      <li style="margin-bottom:.5rem">Die Erfolgsaussicht eines weiteren Arthrodeseversuchs sinkt messbar:
+        95,4 % bei der ersten, <strong>71–80 % bei der ersten Revision</strong>, für eine dritte nach zwei
+        Fehlschlägen <strong>keine publizierten Zahlen</strong>.</li>
+      <li style="margin-bottom:.5rem"><strong>16 % okkulte positive Kulturen</strong> bei „aseptischen"
+        Pseudarthrosen (Metaanalyse, 2.397 Patienten) — Sonikation und 14-Tage-Kulturen sind noch nicht
+        ausgeschöpfte Diagnostik.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Quellen</h3>
+    <p class="small">Alle Angaben stammen aus den folgenden Arbeiten. Wo eine Zahl nicht belegbar war,
+      steht das im Text ausdrücklich dabei — insbesondere fehlt eine publizierte Erfolgsrate für eine
+      dritte Rückfußarthrodese nach mehrfachem Scheitern, und es existiert keine randomisierte Studie zum
+      Vergleich Erhalt gegen Amputation; eine solche wird es aus ethischen Gründen auch nie geben.</p>
+    <div class="small" style="line-height:1.7">
+      METRC/OUTLET, <em>J Bone Joint Surg Am</em> 2021;103(17):1588–97 &middot;
+      Ellington JK et al., <em>J Orthop Trauma</em> 2013;27(1):43–48 &middot;
+      Bennett PM et al., <em>Bone Joint Res</em> 2018;7(2):131–38 &middot;
+      Dickens JF et al., <em>J Bone Joint Surg Am</em> 2013 &middot;
+      Bosse MJ, MacKenzie EJ et al. (LEAP), <em>N Engl J Med</em> 2002;347:1924–31 &middot;
+      Doukas WC et al. (METALS), <em>J Bone Joint Surg Am</em> 2013;95(2) &middot;
+      Krijgh DD et al., <em>Eur J Trauma Emerg Surg</em> 2024;50(3) &middot;
+      Kurozumi T et al., <em>PLOS ONE</em> 2022 &middot;
+      AAOS Clinical Practice Guideline „Limb Salvage or Early Amputation" 2019/2020 &middot;
+      Geertzen JHB et al., <em>J Rehabil Med</em> 2020;52(8) &middot;
+      Ayyaswamy B et al., <em>EFORT Open Rev</em> 2019;4:533–40 &middot;
+      Midbari A et al., <em>Bone Joint J</em> 2016 &middot;
+      Linden E et al., <em>J Rehabil Med</em> 2021 &middot;
+      Honkamp N et al., PMID 11679596 &middot;
+      Limakatso K et al., <em>PLOS ONE</em> 2020;15(10):e0240431 &middot;
+      Kim J et al., <em>PM&amp;R</em> 2018 &middot;
+      Fisher K et al., <em>Int J Rehabil Res</em> 2003;26:51–56 &middot;
+      Akarsu S et al., <em>Prosthet Orthot Int</em> 2013 &middot;
+      „In Situ Subtalar Arthrodesis: A Systematic Review", <em>Int J Foot Ankle</em> 7:084 &middot;
+      Chraim M et al., <em>Foot Ankle Int</em> 2021;42(7):824–32 &middot;
+      Easley ME et al. (Revisionsarthrodese) &middot;
+      Schindler C et al., <em>BMC Musculoskelet Disord</em> 2021;22:234 &middot;
+      Perisano C et al., <em>J Clin Med</em> 2022;11(19):5660 &middot;
+      Eelsing R et al., <em>Bone Joint J</em> 2026;108-B(3):355–60 &middot;
+      Heier KA et al., <em>J Bone Joint Surg Am</em> 2003;85-A(12):2276–82 &middot;
+      Wiersema B et al., <em>Foot Ankle Int</em> 2011;32(11):1052–57 &middot;
+      Capece G et al., <em>Life</em> 2026;16(3):528 &middot;
+      Wagner RK et al., <em>Arch Orthop Trauma Surg</em> 2024 &middot;
+      Hackl S et al., <em>J Orthop Traumatol</em> 2023;24(1):25 &middot;
+      Melcer T et al., <em>PLOS ONE</em> 2017;12(1):e0170569 &middot;
+      Bumbaširević M et al., „An Algorithm for Elective Amputation Combined with Targeted Muscle
+      Reinnervation", <em>J Pers Med</em> 2022;12(7):1169 &middot;
+      AWMF-Leitlinienregister 033-044, 187-056, 030-116, 145-003, 187-047 &middot;
+      G-BA-Richtlinie zum Zweitmeinungsverfahren, § 27b SGB V &middot;
+      Versorgungsmedizin-Verordnung Teil B Nr. 18 &middot;
+      DGUV-Verletzungsartenverzeichnis und MdE-Konsenspapier 12/2025 &middot;
+      § 630g BGB
+    </div>
+    <p class="small" style="margin-top:.8rem"><strong>Wichtig:</strong> Diese Zusammenstellung ist eine
+      Literaturübersicht für das Patientengespräch, keine ärztliche Empfehlung und keine
+      Behandlungsentscheidung. Studienergebnisse aus Kollektiven lassen sich nicht ohne Weiteres auf einen
+      Einzelfall übertragen — genau darüber ist mit den Behandlern zu sprechen.</p>
+  </div>
+
 </section>
 
 <!-- ============ DATEN ============ -->
@@ -1704,6 +2193,18 @@ $("#printChart").addEventListener("click", ()=>{
   h += chartForPrint() + metricsTable(+$("#statRange").value) + pFoot();
   doPrint(h);
 });
+$("#printEvidenz").addEventListener("click", ()=>{
+  const src = $("#tab-evidenz").cloneNode(true);
+  src.querySelectorAll("button").forEach(x=>x.remove());
+  src.querySelectorAll("details").forEach(x=>x.setAttribute("open",""));
+  src.querySelectorAll(".stat").forEach(st=>{
+    const k=(st.querySelector(".k")||{}).textContent||"", v=(st.querySelector(".v")||{}).textContent||"", d=(st.querySelector(".d")||{}).textContent||"";
+    const pp=document.createElement("p"); pp.innerHTML = "<strong>"+esc(k)+": "+esc(v)+"</strong> — "+esc(d);
+    st.replaceWith(pp);
+  });
+  doPrint(pHead("Evidenz und Studienlage","Literaturübersicht zur Entscheidung über eine elektive Amputation")
+    + src.innerHTML + pFoot());
+});
 $("#printQuest").addEventListener("click", ()=>{
   doPrint(pHead("Standardisierte Fragebögen","Ergebnisse im Verlauf") + questTable() + pFoot());
 });
@@ -1730,7 +2231,15 @@ $("#btnPrintAll").addEventListener("click", ()=>{
       s.qs.map(q=>`<tr><td style="width:45%">${esc(q.q)}</td><td>${DB.consult[q.k]?nl2br(DB.consult[q.k]):"&nbsp;"}</td></tr>`).join("")+
       `</tbody></table>`;
   });
-  h += `<div class="pagebreak"></div><h2>Anhang: Einzelwerte des Schmerztagebuchs</h2>`+diaryTable(DB.entries.slice().reverse());
+  const evi = $("#tab-evidenz").cloneNode(true);
+  evi.querySelectorAll("button").forEach(x=>x.remove());
+  evi.querySelectorAll("details").forEach(x=>x.setAttribute("open",""));
+  evi.querySelectorAll(".stat").forEach(st=>{
+    const k=(st.querySelector(".k")||{}).textContent||"", v=(st.querySelector(".v")||{}).textContent||"", d=(st.querySelector(".d")||{}).textContent||"";
+    const pp=document.createElement("p"); pp.innerHTML = "<strong>"+esc(k)+": "+esc(v)+"</strong> — "+esc(d); st.replaceWith(pp);
+  });
+  h += `<div class="pagebreak"></div><h2>Anhang A: Evidenz und Studienlage</h2>` + evi.innerHTML;
+  h += `<div class="pagebreak"></div><h2>Anhang B: Einzelwerte des Schmerztagebuchs</h2>`+diaryTable(DB.entries.slice().reverse());
   h += pFoot();
   doPrint(h);
 });
@@ -1812,6 +2321,11 @@ function init(){
   $("#e_date").value = todayISO();
   const t = DB.entries.find(e=>e.date===todayISO());
   if(t) fillEntry(t);
+  if(!DB.dossier.d_name && !DB.entries.length){
+    DB.dossier.d_name = "Jann Seidenspinner";
+    DB.dossier.d_accDate = "2024-05-04";
+    save();
+  }
   loadDossier(); renderConsult();
   if(DB.dossier.d_side) $("#headSub").textContent = `Rückfuß ${DB.dossier.d_side} · tägliche Selbsterfassung`;
   renderStats(); renderCharts(); renderPatterns(); renderHistory(); renderQuestTable();

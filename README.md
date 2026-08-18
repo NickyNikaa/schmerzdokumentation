@@ -34,6 +34,7 @@ Das ist der wichtigste Punkt, deshalb steht er oben:
 | **Fragebögen** | Fuß-Funktions-Index (FFI-orientiert), AOFAS Ankle-Hindfoot Score, schmerzbedingte Beeinträchtigung (PROMIS-orientiert), PHQ-9, Selbstbeobachtung zu neuropathischem Schmerz und CRPS entlang der Budapest-Symptomgruppen |
 | **Arzt-Dossier** | Druckfertige Fallzusammenfassung: Fragestellung voran, Unfallhergang, OP-Zeitstrahl, Diagnosen, Bildgebung, ausgeschöpfte Therapien, Messwerte automatisch aus dem Tagebuch, Teilhabe, Anlagen-Checkliste |
 | **Arztgespräch** | 25 vorbereitete Fragen in 6 Blöcken mit Begründung und Platz für die Antworten des Arztes |
+| **Evidenz & Studien** | Aufbereitete Studienlage zum Vergleich Extremitaetenerhalt gegen Amputation bei Rueckfussverletzungen (OUTLET, LEAP, METALS, Bennett, Dickens), Ergebnisse der Amputation bei therapierefraktaerem Schmerz, ehrliche Gegenrechnung der Risiken, Erfolgsraten weiterer Arthrodeseversuche, publizierter Entscheidungsalgorithmus, deutsche Leitlinien, Zweitmeinungswege, spezialisierte Kliniken, GdB und MdE, Patientenrechte, Peer-Support |
 | **Daten & Export** | JSON-Sicherung und -Wiederherstellung, CSV, Gesamtdokumentation als PDF |
 
 ---
