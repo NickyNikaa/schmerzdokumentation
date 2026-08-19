@@ -158,6 +158,11 @@ svg.chart{display:block; min-width:520px; width:100%; height:auto}
 }
 .toast.show{transform:translateX(-50%) translateY(0)}
 
+.impuls{border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:8px; padding:.8rem .95rem; background:linear-gradient(180deg,#fbfcfd,#fff)}
+.impuls.alt{border-left-color:#7a5195}
+.impuls-k{font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; font-weight:680; color:var(--ink-soft); margin-bottom:.3rem}
+.impuls-t{font-size:1rem; line-height:1.5; margin:0; color:var(--ink)}
+.impuls-q{font-size:.8rem; color:var(--ink-soft); margin:.4rem 0 0; font-style:italic}
 #printArea{display:none}
 
 /* ---------- Print ---------- */
@@ -213,8 +218,10 @@ svg.chart{display:block; min-width:520px; width:100%; height:auto}
 <!-- ============ ÜBERSICHT ============ -->
 <section class="tabpanel" id="tab-dash">
 
+  <div class="card" id="dailyCard"></div>
+
   <div class="notice info" id="emptyHint" hidden>
-    <p><strong>Noch keine Einträge.</strong> Beginne unter <em>Tageseintrag</em>. Schon zwei Wochen lückenlose
+    <p><strong>Noch keine Einträge, Jann.</strong> Fang unter <em>Tageseintrag</em> an. Schon zwei Wochen lückenlose
     Erfassung verändern ein Arztgespräch spürbar: Aus „es tut sehr weh“ wird eine Kurve mit Zahlen,
     Uhrzeiten und Metern.</p>
   </div>
@@ -275,6 +282,7 @@ svg.chart{display:block; min-width:520px; width:100%; height:auto}
   <div class="card">
     <div class="card-head">
       <h2 id="entryTitle">Neuer Tageseintrag</h2>
+      <span class="small" id="entryHello"></span>
       <span class="small" id="entryStatus"></span>
     </div>
     <div class="grid g2">
@@ -1246,13 +1254,164 @@ function toast(msg){ const t=$("#toast"); t.textContent = String(msg).length>140
 function lvl(v){ return v<=2?0 : v<=4?1 : v<=6?2 : 3; }
 function n100(v){ return v==null ? "—" : Math.round(v*10); }
 
+/* ============================================================
+   PERSÖNLICHE ANSPRACHE UND TAGESIMPULSE
+   ============================================================ */
+function firstName(){
+  const n = (DB.dossier.d_name||"Jann").trim();
+  const f = n.split(/\s+/)[0];
+  return f || "Jann";
+}
+function greeting(){
+  const h = new Date().getHours();
+  if(h < 5)  return "Noch wach";
+  if(h < 11) return "Guten Morgen";
+  if(h < 14) return "Hallo";
+  if(h < 18) return "Guten Tag";
+  if(h < 22) return "Guten Abend";
+  return "Noch wach";
+}
+function dayNumber(){
+  const d = new Date();
+  return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000);
+}
+
+/* Zwei getrennte Sammlungen. Links das Bodenständige, rechts der weitere Blick.
+   Bewusst ohne Durchhalteparolen: nichts hier verlangt, tapfer zu sein. */
+const IMPULS_A = [
+  "Heute musst du nichts beweisen. Es reicht, aufzuschreiben, wie es war.",
+  "Ein dokumentierter Tag zählt. Auch ein schlechter. Vor allem ein schlechter.",
+  "Du bist nicht das Problem, das gelöst werden muss. Der Fuß ist es.",
+  "Zwei Minuten Eintrag heute sind in vier Wochen eine Kurve, die niemand wegdiskutieren kann.",
+  "Du musst deinen Schmerz nicht kleiner machen, damit andere ihn glauben.",
+  "Schwankungen sind kein Widerspruch. Sie sind der Beweis, dass du ehrlich misst.",
+  "Ein guter Tag macht die schlechten nicht ungeschehen — und er entwertet sie auch nicht.",
+  "Du bittest nicht um Mitleid. Du bittest um eine überprüfbare Antwort.",
+  "Es ist keine Schwäche, müde zu sein von etwas, das seit über zwei Jahren wehtut.",
+  "Was du hier aufschreibst, ist Arbeit. Auch wenn es sich nicht danach anfühlt.",
+  "Du darfst wütend sein. Wut über zehn Operationen ist eine gesunde Reaktion.",
+  "Niemand muss verstehen, wie sich das anfühlt, damit es real ist.",
+  "Heute nichts zu schaffen ist auch eine Information. Trag sie ein.",
+  "Deine Zahlen brauchen keine Rechtfertigung. Sie brauchen nur Regelmäßigkeit.",
+  "Es ist erlaubt, den Tag abzubrechen, wenn der Fuß es sagt.",
+  "Du hast bisher jeden Weg mitgetragen, den man dir angeboten hat. Das ist aktenkundig.",
+  "Fragen zu stellen ist kein Misstrauen. Es ist Sorgfalt.",
+  "Der Unterschied zwischen Verzweiflung und einer Entscheidung ist Zeit und Dokumentation. Beides hast du.",
+  "Du musst heute nicht wissen, was richtig ist. Nur, wie es war.",
+  "Kleine Schritte zählen hier wörtlich — trag die Meter ein.",
+  "Ein Tag ohne Fortschritt ist kein verlorener Tag. Er ist ein erfasster Tag.",
+  "Dass du das hier führst, sagt mehr über deine Ernsthaftigkeit als jedes Gespräch.",
+  "Es gehört Mut dazu, den eigenen Zustand ehrlich in Zahlen zu fassen.",
+  "Du bist der Einzige, der weiß, wie die Nacht war. Deshalb ist deine Angabe die wichtigste.",
+  "Ruhe ist kein Nichtstun, wenn der Körper an einer Baustelle arbeitet.",
+  "Es ist nicht undankbar, sich mehr zu wünschen als das, was jetzt ist.",
+  "Wenn heute nur ein einziger Wert reingeht: gut. Morgen wieder.",
+  "Deine Belastungsgrenze ist keine Charakterfrage.",
+  "Du schuldest niemandem gute Laune, damit man dir zuhört.",
+  "Was gestern ging, muss heute nicht gehen. Das ist bei diesem Befund normal.",
+  "Der Schmerz lügt manchmal über die Zukunft. Deine Aufzeichnungen tun das nicht.",
+  "Es ist in Ordnung, heute nur zu funktionieren.",
+  "Du dokumentierst nicht für die Ärzte. Du dokumentierst, damit du selbst siehst, was war.",
+  "Zwei Jahre durchzuhalten war keine Selbstverständlichkeit.",
+  "Nachfragen darfst du. Auch dreimal. Auch beim selben Arzt.",
+  "Du bist mehr als dieser Fuß, auch wenn er heute alles beansprucht.",
+  "Ein ehrlicher Wert von 4 wiegt mehr als ein dramatischer von 10.",
+  "Es hilft niemandem, wenn du deine Grenze überziehst — auch dir nicht.",
+  "Die Entscheidung, die du vorbereitest, ist deine. Niemand nimmt sie dir ab, aber auch niemand weg.",
+  "Manche Tage sind nur zum Überstehen da. Auch die gehören ins Tagebuch.",
+  "Du musst nicht dankbar sein für das, was noch geht, um zu benennen, was nicht mehr geht.",
+  "Wer so lange durchhält, handelt nicht impulsiv.",
+  "Heute zählt nur der heutige Tag. Der Rest kommt später dran.",
+  "Es ist okay, wenn Hoffnung heute keine Rolle spielt. Trag trotzdem ein.",
+  "Du sammelst gerade das, was dir bisher gefehlt hat: Belege."
+];
+
+const IMPULS_B = [
+  ["Die Welt zerbricht jeden, und danach sind viele an den gebrochenen Stellen stark.", "Ernest Hemingway"],
+  ["Mitten im Winter habe ich erfahren, dass es in mir einen unbesiegbaren Sommer gibt.", "Albert Camus"],
+  ["Füße, wozu brauche ich sie, wenn ich Flügel zum Fliegen habe.", "Frida Kahlo, in ihr Tagebuch nach der Amputation ihres Beines, 1953"],
+  ["Wer ein Warum zum Leben hat, erträgt fast jedes Wie.", "Viktor Frankl, nach Nietzsche"],
+  ["Es scheint immer unmöglich, bis man es tut.", "Nelson Mandela"],
+  ["Wie schlimm das Leben auch scheinen mag, es gibt immer etwas, das man tun kann.", "Stephen Hawking"],
+  ["Ein Held ist ein gewöhnlicher Mensch, der die Kraft findet durchzuhalten.", "Christopher Reeve"],
+  ["Man muss das Unmögliche versuchen, um das Mögliche zu erreichen.", "Hermann Hesse"],
+  ["Wer kämpft, kann verlieren. Wer nicht kämpft, hat schon verloren.", "Bertolt Brecht"],
+  ["Auch der längste Weg beginnt mit einem ersten Schritt.", "Laotse zugeschrieben"],
+  ["Es ist nicht wichtig, wie langsam du gehst, solange du nicht stehen bleibst.", "Konfuzius zugeschrieben"],
+  ["Vielleicht sind alle Drachen unseres Lebens Prinzessinnen, die nur darauf warten, uns schön und mutig zu sehen.", "Rainer Maria Rilke"],
+  ["Lassen Sie sich das Leben geschehen. Glauben Sie mir: das Leben hat recht, auf alle Fälle.", "Rainer Maria Rilke"],
+  ["Nicht weil es schwer ist, wagen wir es nicht, sondern weil wir es nicht wagen, ist es schwer.", "Seneca"],
+  ["Es gibt nichts Gutes, außer man tut es.", "Erich Kästner"],
+  ["Die Welt ist voller Leid, aber auch voll von dessen Überwindung.", "Helen Keller"],
+  ["Du hast Macht über deinen Geist, nicht über die Ereignisse. Wenn du das begreifst, findest du Kraft.", "Marc Aurel"],
+  ["Und dann muss man ja auch noch Zeit haben, einfach dazusitzen und vor sich hin zu schauen.", "Astrid Lindgren"],
+  ["Der Weg entsteht, indem man ihn geht.", "Franz Kafka zugeschrieben"],
+  ["Alles, was gegen die Natur ist, hat auf die Dauer keinen Bestand.", "Charles Darwin zugeschrieben"],
+  ["Hoffnung ist nicht die Überzeugung, dass etwas gut ausgeht, sondern die Gewissheit, dass etwas Sinn hat, egal wie es ausgeht.", "Václav Havel"],
+  ["Zwischen Reiz und Reaktion liegt ein Raum. In diesem Raum liegt unsere Freiheit.", "Viktor Frankl zugeschrieben"],
+  ["Man sieht nur mit dem Herzen gut. Das Wesentliche ist für die Augen unsichtbar.", "Antoine de Saint-Exupéry"],
+  ["Wer immer tut, was er schon kann, bleibt immer das, was er schon ist.", "Henry Ford zugeschrieben"],
+  ["Fange nie an aufzuhören, höre nie auf anzufangen.", "Cicero zugeschrieben"],
+  ["Es kommt nicht darauf an, dem Leben mehr Jahre zu geben, sondern den Jahren mehr Leben.", "Alexis Carrel zugeschrieben"],
+  ["Wir müssen die Veränderung sein, die wir in der Welt sehen wollen.", "Mahatma Gandhi zugeschrieben"],
+  ["Der Mensch ist nicht die Summe dessen, was er hat, sondern dessen, was er noch nicht hat.", "Jean-Paul Sartre"],
+  ["Am Ende wird alles gut. Und wenn es nicht gut ist, ist es noch nicht das Ende.", "Oscar Wilde zugeschrieben"],
+  ["Wer sein Ziel kennt, findet den Weg.", "Laotse zugeschrieben"],
+  ["Geduld ist bitter, aber ihre Frucht ist süß.", "Jean-Jacques Rousseau"],
+  ["Nichts in der Welt ist so mächtig wie eine Idee, deren Zeit gekommen ist.", "Victor Hugo"],
+  ["Nur wer sein Ziel aus den Augen verliert, muss sich anstrengen.", "unbekannt"],
+  ["Nicht alles, was zählt, kann gezählt werden — aber vieles davon schon.", "frei nach William Bruce Cameron"],
+  ["Was du heute tust, entscheidet darüber, wie du morgen dastehst.", "Sprichwort"],
+  ["Wer nicht fragt, bekommt keine Antwort.", "Sprichwort"],
+  ["Wissen ist der einzige Besitz, der wächst, wenn man ihn teilt.", "Sprichwort"],
+  ["Es ist besser, ein Licht anzuzünden, als über die Dunkelheit zu klagen.", "Sprichwort"],
+  ["Man kann den Wind nicht ändern, aber die Segel anders setzen.", "Aristoteles zugeschrieben"],
+  ["Beharrlichkeit führt zum Ziel — nicht Geschwindigkeit.", "Sprichwort"],
+  ["Die beste Zeit, einen Baum zu pflanzen, war vor zwanzig Jahren. Die zweitbeste ist jetzt.", "Sprichwort"],
+  ["Auch aus Steinen, die einem in den Weg gelegt werden, kann man Schönes bauen.", "Johann Wolfgang von Goethe zugeschrieben"],
+  ["Erfahrung ist nicht das, was einem zustößt. Erfahrung ist, was man daraus macht.", "Aldous Huxley"],
+  ["Es ist nie zu spät, das zu werden, was man hätte sein können.", "George Eliot zugeschrieben"],
+  ["Ein Schiff im Hafen ist sicher. Aber dafür sind Schiffe nicht gebaut.", "John A. Shedd"]
+];
+
+function renderDaily(){
+  const box = document.getElementById("dailyCard");
+  if(!box) return;
+  const d = dayNumber(), name = firstName();
+  const a = IMPULS_A[((d % IMPULS_A.length) + IMPULS_A.length) % IMPULS_A.length];
+  const bi = (((d*7 + 3) % IMPULS_B.length) + IMPULS_B.length) % IMPULS_B.length;
+  const b = IMPULS_B[bi];
+  const heute = new Date().toLocaleDateString("de-DE",{weekday:"long", day:"2-digit", month:"long", year:"numeric"});
+  const ex = DB.entries.find(e=>e.date===todayISO());
+  const status = ex
+    ? `<span class="badge ok">Heutiger Eintrag ist gespeichert</span>`
+    : `<span class="badge mid">Für heute steht noch kein Eintrag</span>`;
+  box.innerHTML = `
+    <div class="card-head" style="margin-bottom:.5rem">
+      <h2 style="font-size:1.3rem">${esc(greeting())}, ${esc(name)}.</h2>
+      <span class="small">${esc(heute)}</span>
+    </div>
+    <p class="small" style="margin-bottom:.9rem">${status}</p>
+    <div class="grid g2">
+      <div class="impuls">
+        <div class="impuls-k">Für heute</div>
+        <p class="impuls-t">${esc(a)}</p>
+      </div>
+      <div class="impuls alt">
+        <div class="impuls-k">Zum Weiterdenken</div>
+        <p class="impuls-t">„${esc(b[0])}"</p>
+        <p class="impuls-q">— ${esc(b[1])}</p>
+      </div>
+    </div>`;
+}
+
 /* ---------- Tabs ---------- */
 $$("nav.tabs button").forEach(b => b.addEventListener("click", () => showTab(b.dataset.tab)));
 function showTab(id){
   $$("nav.tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.tab===id)));
   $$("section.tabpanel").forEach(s => { s.hidden = (s.id !== "tab-"+id); });
   window.scrollTo({top:0,behavior:"instant"});
-  if(id==="dash"){ renderStats(); renderCharts(); renderPatterns(); }
+  if(id==="dash"){ renderDaily(); renderStats(); renderCharts(); renderPatterns(); }
   if(id==="history") renderHistory();
   if(id==="quest") renderQuestTable();
 }
@@ -1402,6 +1561,7 @@ function refreshEntryStatus(){
   const d = $("#e_date").value;
   const ex = DB.entries.find(x=>x.date===d);
   $("#entryTitle").textContent = ex ? "Eintrag bearbeiten" : "Neuer Tageseintrag";
+  const eh = $("#entryHello"); if(eh) eh.textContent = ex ? "" : "Wie war der Tag, "+firstName()+"?";
   $("#entryStatus").textContent = ex ? "Für dieses Datum existiert bereits ein Eintrag — Speichern überschreibt ihn." : "";
 }
 $("#e_date").addEventListener("change", ()=>{
@@ -1418,7 +1578,8 @@ $("#entryForm").addEventListener("submit", ev=>{
   if(i>=0) DB.entries[i]=e; else DB.entries.push(e);
   DB.entries.sort((a,b)=> a.date < b.date ? -1 : 1);
   save();
-  toast("Eintrag für "+deDate(e.date)+" gespeichert.");
+  toast("Danke, "+firstName()+" — Eintrag für "+deDate(e.date)+" gespeichert.");
+  renderDaily();
   $("#saveHint").textContent = "Zuletzt gespeichert: " + new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"});
   refreshEntryStatus(); renderStats(); renderCharts(); renderPatterns();
 });
@@ -2327,9 +2488,11 @@ function init(){
     save();
   }
   loadDossier(); renderConsult();
-  if(DB.dossier.d_side) $("#headSub").textContent = `Rückfuß ${DB.dossier.d_side} · tägliche Selbsterfassung`;
-  renderStats(); renderCharts(); renderPatterns(); renderHistory(); renderQuestTable();
+  if(DB.dossier.d_side) $("#headSub").textContent = `${firstName()} · Rückfuß ${DB.dossier.d_side}`;
+  else $("#headSub").textContent = `Persönliche Dokumentation für ${firstName()}`;
+  renderDaily(); renderStats(); renderCharts(); renderPatterns(); renderHistory(); renderQuestTable();
   refreshEntryStatus(); storageInfo();
+  setInterval(renderDaily, 300000);
   if(!HAS_LS){
     const n = document.createElement("div"); n.className="notice warn";
     n.innerHTML = "<strong>Achtung:</strong> Dieser Browser erlaubt keine lokale Speicherung (privater Modus oder blockierte Cookies). Deine Eingaben gehen beim Schließen des Tabs verloren. Bitte einen normalen Browser-Tab verwenden oder regelmäßig als JSON sichern.";
